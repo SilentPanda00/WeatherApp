@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!--Making the website addaptable to the viewport-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- GOOGLE FONTS -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- BOOTSTRAP -->
+
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    /> -->
+
+    <!-- WEBPAGE TITLE ICON -->
+    <link
+      rel="shortcut icon"
+      href="./Pictures/weather_icon.ico"
+      type="image/x-icon"
+    />
+
+    <!-- FONTAWESOME CDN LINK -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- BOOTSTRAP SCRIPT -->
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+      crossorigin="anonymous"
+    ></script> -->
+    <script defer src="script.js"></script>
+    <title>weather app</title>
+  </head>
+  <body>
+    <header>
+      <section class="section-nav">
+        <nav class="nav-menu">
+          <div class="logo-and-name">
+            <div class="logo">
+              <img
+                src="./Pictures/weather_icon.ico"
+                alt="App logo"
+                class="logo"
+              />
+            </div>
+
+            <p class="name">How's the weather?</p>
+          </div>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a class="active" href="weather.html">Weather</a></li>
+            <li><a href="locations.html">Locations</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li class="search-container">
+              <form action="" method="">
+                <input
+                  class="search expandright"
+                  id="searchright"
+                  type="search"
+                  name="q"
+                  placeholder="Search"
+                />
+                <label class="searchbutton" for="searchright"
+                  ><i class="fa fa-solid fa-magnifying-glass"></i
+                ></label>
+              </form>
+            </li>
+          </ul>
+        </nav>
+      </section>
+    </header>
+    <section class="section-content">
+      <p class="error"></p>
+      <p class="location"></p>
+      <p class="temperature"></p>
+      <p class="weather"></p>
+    </section>
+    <footer>This is a footer</footer>
+  </body>
+</html>
