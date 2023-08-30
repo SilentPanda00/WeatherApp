@@ -66,51 +66,27 @@ const locations = [
 // const hour = getForecastHour();
 // console.log(hour);
 
+const getCardsPerSlide = function () {
+  return document.body.getBoundingClientRect().width < 800 ? 1 : 2;
+};
+
 const createCard = function (data, coord, slide) {
   // console.log(data);
   let html;
   html = `
               <div class="card">
                 <p class="temperature">${
-                  data.hourly.temperature_2m[hour]
+                  data.current_weather.temperature
                 } °C</p>
                 <p class = "weather">Weather: ${
-                  weatherCode.get(data.hourly.weathercode[hour]).weather
+                  weatherCode.get(data.current_weather.weathercode).weather
                 }
                 <p class="location">${coord[0].display_name}</p>
               </div>`;
   slide.insertAdjacentHTML('afterbegin', html);
 };
 
-//RENDER THE SLIDES AFTER FETCHING THE DATA FOR THE COORDINATES OF EACH LOCATION, AND USE THE COORDS TO FURTHER FETCH THE WEATHER DATA
-
-const getWeatherDataForCarousel = async function (locations) {
-  const coordsPr = [];
-  const carouselDataPr = [];
-  locations.forEach(location => {
-    coordsPr.push(
-      fetch(`https://geocode.maps.co/search?q={${location}}`).then(response =>
-        response.json()
-      )
-    );
-  });
-  const coords = await Promise.all(coordsPr);
-  coords.forEach(coord => {
-    carouselDataPr.push(
-      fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${coord[0].lat}&longitude=${coord[0].lon}&hourly=temperature_2m,weathercode&timeformat=unixtime&timezone=auto&forecast_days=1`
-      ).then(response => response.json())
-    );
-  });
-  const carouselData = await Promise.all(carouselDataPr);
-  // console.log(carouselData);
-  // console.log(coords);
-  renderCarousel(
-    carouselData,
-    coords,
-    Math.trunc(document.body.getBoundingClientRect().width / 300)
-  );
-};
+//RENDER THE SLIDES AFTER FETCHING THE DATA FOR THE COORDINATES OF EACH LOCATION, AND USE THE COORDS TO FETCH THE WEATHER DATA
 
 const renderCarousel = function (data, coords, cardsPerSlide) {
   // console.log(data.cities);
@@ -133,6 +109,30 @@ const renderCarousel = function (data, coords, cardsPerSlide) {
     carousel.prepend(slide);
   }
   makeCarousel();
+};
+
+const getWeatherDataForCarousel = async function (locations) {
+  const coordsPr = [];
+  const carouselDataPr = [];
+  locations.forEach(location => {
+    coordsPr.push(
+      fetch(`https://geocode.maps.co/search?q={${location}}`).then(response =>
+        response.json()
+      )
+    );
+  });
+  const coords = await Promise.all(coordsPr);
+  coords.forEach(coord => {
+    carouselDataPr.push(
+      fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${coord[0].lat}&longitude=${coord[0].lon}&hourly=temperature_2m,weathercode&current_weather=true&timeformat=unixtime&timezone=auto&forecast_days=1`
+      ).then(response => response.json())
+    );
+  });
+  const carouselData = await Promise.all(carouselDataPr);
+  // console.log(carouselData);
+  // console.log(coords);
+  renderCarousel(carouselData, coords, getCardsPerSlide());
 };
 
 //CAROUSEL FUNCTIONALITY
@@ -269,7 +269,6 @@ const makeCarousel = function () {
 if (document.querySelector('.carousel')) {
   window.addEventListener('load', function () {
     getWeatherDataForCarousel(locations);
-    console.log(Math.trunc(document.body.getBoundingClientRect().width / 300));
   });
   carousel.addEventListener('click', function (e) {
     if (e.target.closest('.card')) {
@@ -320,14 +319,15 @@ const getWeatherUsingGeolocation = function () {
     const lon = position.coords.longitude;
     //using the coords to get info from api
     const data = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&timeformat=unixtime&timezone=auto&forecast_days=1`
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&current_weather=true&timeformat=unixtime&timezone=auto`
     ).then(response => response.json());
+    // console.log(data);
 
     document.querySelector('.weather').textContent = weatherCode.get(
-      data.hourly.weathercode[hour]
+      data.current_weather.weathercode
     ).weather;
     document.querySelector('.temperature').textContent =
-      data.hourly.temperature_2m[hour];
+      data.current_weather.temperature;
     const locationName = (
       await fetch(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`).then(
         response => response.json()
@@ -337,7 +337,9 @@ const getWeatherUsingGeolocation = function () {
     document.querySelector('.location').textContent = locationName;
 
     //setting the status message to ""
-    statusMsg.textContent = '';
+    statusMsg.textContent = `${new Date(
+      data.current_weather.time * 1000
+    ).toLocaleString()}`;
   };
   //error handling function
   const error = function (e) {
