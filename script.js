@@ -42,12 +42,21 @@ const locations = [
   'pitesti',
   'craiova',
   'constanta',
-  'lunca corbului',
-  'cerbu,arges',
   'brasov',
   'sibiu',
-  'cluj',
+  'cluj-napoca',
   'iasi',
+  'targu jiu',
+  'ramnicu valcea',
+  'ploiesti',
+  'buzau',
+  'galati',
+  'focsani',
+  'bacau',
+  'suceava',
+  'botosani',
+  'piatra neamt',
+  'timisoara',
 ];
 
 // const capitalize = function (str) {
@@ -67,21 +76,40 @@ const locations = [
 // console.log(hour);
 
 const getCardsPerSlide = function () {
-  return document.body.getBoundingClientRect().width < 800 ? 1 : 2;
+  const maxWidth = Math.max(
+    document.body.scrollWidth,
+    document.documentElement.scrollWidth,
+    document.body.offsetWidth,
+    document.documentElement.offsetWidth,
+    document.documentElement.clientWidth
+  );
+  switch (true) {
+    case maxWidth <= 780:
+      return 1;
+    case maxWidth <= 1024:
+      return 2;
+    case maxWidth <= 1440:
+      return 3;
+  }
+  return 3;
 };
+console.log(getCardsPerSlide());
 
 const createCard = function (data, coord, slide) {
   // console.log(data);
   let html;
   html = `
               <div class="card">
-                <p class="temperature">${Math.round(
-                  data.current_weather.temperature
-                )} °C</p>
+                <p class="location"><i class="fa-solid fa-location-dot"></i> ${
+                  coord[0].display_name.split(',')[0]
+                }</p>
+                <p class="temperature"><i class="fa-solid fa-${
+                  weatherCode.get(data.current_weather.weathercode).icon
+                }"></i> 
+                   ${Math.round(data.current_weather.temperature)} °C</p>
                 <p class = "weather">Weather: ${
                   weatherCode.get(data.current_weather.weathercode).weather
                 }
-                <p class="location">${coord[0].display_name}</p>
               </div>`;
   slide.insertAdjacentHTML('afterbegin', html);
 };
@@ -98,8 +126,8 @@ const renderCarousel = function (data, coords, cardsPerSlide) {
     const slide = document.createElement('div');
     slide.classList.add('slide');
     for (
-      let j = i * cardsPerSlide - cardsPerSlide;
-      j < i * cardsPerSlide;
+      let j = i * cardsPerSlide - cardsPerSlide + 1;
+      j <= i * cardsPerSlide;
       j++
     ) {
       if (data[j]) {
@@ -108,6 +136,17 @@ const renderCarousel = function (data, coords, cardsPerSlide) {
     }
     carousel.prepend(slide);
   }
+  // if (data.length % cardsPerSlide !== 0) {
+  //   const rslide = document.createElement('div');
+  //   let rest = data.length - (data.length % cardsPerSlide) - 1;
+  //   rslide.classList.add('slide');
+  //   while (rest !== data.length) {
+  //     createCard(data[rest], coords[rest], rslide);
+  //     rest++;
+  //   }
+  //   carousel.prepend(rslide);
+  // }
+
   makeCarousel();
 };
 
@@ -138,12 +177,13 @@ const getWeatherDataForCarousel = async function (locations) {
 //CAROUSEL FUNCTIONALITY
 
 const makeCarousel = function () {
-  const slides = document.querySelectorAll('.slide');
+  let [...slides] = document.querySelectorAll('.slide');
   const btnLeft = document.querySelector('.slider__btn--left');
   const btnRight = document.querySelector('.slider__btn--right');
   const dotContainer = document.querySelector('.dots');
 
   let curSlide = 0;
+  if (getCardsPerSlide() === 1) slides = slides.slice(1);
   const totalSlides = slides.length;
   console.log(slides);
 
@@ -177,6 +217,7 @@ const makeCarousel = function () {
 
   const goToSlide = function (slide) {
     // Update the "old" adjacent slides with "new" ones
+    curSlide = slide;
     let newPrevious = slide - 1;
     let newNext = slide + 1;
     let oldPrevious = slide - 2;
@@ -195,7 +236,7 @@ const makeCarousel = function () {
     if (slide === 0) {
       newPrevious = totalSlides - 1;
       oldPrevious = totalSlides - 2;
-      oldNext = slide + 1;
+      oldNext = slide + 2;
     } else if (slide === totalSlides - 1) {
       newPrevious = slide - 1;
       newNext = 0;
@@ -297,7 +338,7 @@ const getWeatherWithChosenLocation = async function (wlocation) {
 
   //fetch the weather data with the coords
   const data = await fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${coords[0].lat}&longitude=${coords[0].lon}&hourly=temperature_2m,weathercode&&timeformat=unixtime&timezone=auto&forecast_days=1`
+    `https://api.open-meteo.com/v1/forecast?latitude=${coords[0].lat}&longitude=${coords[0].lon}&hourly=temperature_2m,weathercode&timeformat=unixtime&timezone=auto&forecast_days=1`
   ).then(response => response.json());
 
   document.querySelector('.weather').textContent = weatherCode.get(
@@ -324,10 +365,10 @@ const getWeatherUsingGeolocation = function () {
     // console.log(data);
 
     document.querySelector('.weather').textContent = weatherCode.get(
-      data.current_weather.weathercode
+      data.hourly.weathercode[hour]
     ).weather;
     document.querySelector('.temperature').textContent =
-      data.current_weather.temperature;
+      data.hourly.temperature_2m[hour];
     const locationName = (
       await fetch(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`).then(
         response => response.json()
@@ -337,9 +378,10 @@ const getWeatherUsingGeolocation = function () {
     document.querySelector('.location').textContent = locationName;
 
     //setting the status message to ""
-    statusMsg.textContent = `${new Date(
-      data.current_weather.time * 1000
-    ).toLocaleString()}`;
+    statusMsg.textContent = '';
+    // statusMsg.textContent = `${new Date(
+    //   data.current_weather.time * 1000
+    // ).toLocaleString()}`;
   };
   //error handling function
   const error = function (e) {

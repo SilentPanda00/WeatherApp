@@ -1,7 +1,7 @@
 :root {
   --dark-blue: #000383;
   --blue: #0e38ae;
-  --light-blue: #19afd1;
+  --light-blue: #00d9ff;
   --very-light-blue: #e3f4fe;
   --cornsilk: #fffae0;
   --tangerine-yellow: #ffcd00;
@@ -212,7 +212,7 @@ body {
 }
 
 .app-title {
-  height: 15%;
+  /* height: 15%; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -238,9 +238,9 @@ body {
 .section-content {
   width: 90%;
   height: 90%;
-  margin: 3em 0em;
+  /* margin: 3em 0em; */
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   flex-direction: column;
   /* background: linear-gradient(rgb(227, 244, 254, 0.7), rgb(25, 116, 209, 0.7)); */
@@ -254,7 +254,7 @@ footer {
 /* CAROUSEL */
 
 .carousel {
-  width: 80%;
+  width: 90%;
   height: 80%;
   margin: 0 auto;
   position: relative;
@@ -318,7 +318,7 @@ footer {
   z-index: 10;
 
   border: none;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--very-light-blue);
   font-family: inherit;
   color: #333;
   border-radius: 50%;
@@ -331,11 +331,13 @@ footer {
 
 .slider__btn--left {
   left: 6%;
+  top: 40%;
   transform: translate(-50%, -50%);
 }
 
 .slider__btn--right {
   right: 6%;
+  top: 40%;
   transform: translate(50%, -50%);
 }
 
@@ -369,6 +371,7 @@ footer {
 .dots__dot--active {
   /* background-color: #fff; */
   background-color: var(--tangerine-yellow);
+  transform: scale(110%);
   opacity: 1;
 }
 
@@ -380,27 +383,31 @@ footer {
 }
 .card {
   height: 75%;
-  width: 280px;
-  margin: 0 auto;
-  margin-bottom: auto;
+  width: 275px;
+  margin: 0 auto auto auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   border-radius: 1em;
   padding: 2em;
   color: var(--very-light-blue);
-  background: linear-gradient(rgb(0, 217, 255), rgb(0, 102, 255));
+  background: linear-gradient(var(--light-blue), rgb(0, 102, 255));
+  /* transition: 0.4s; */
 }
 
 .card p:first-child {
   margin-top: 2em;
-  font-size: 2rem;
-  font-family: 'Neuton', serif;
+  font-size: 1.125em;
 }
 
 .card p:last-child {
   margin-bottom: 3em;
+}
+
+.card .temperature {
+  font-size: 2rem;
+  font-family: 'Neuton', serif;
 }
 
 @media (max-width: 780px) {
