@@ -108,7 +108,7 @@ const getWeatherDataForCarousel = async function (locations) {
   renderCarousel(
     carouselData,
     coords,
-    Math.trunc(document.body.getBoundingClientRect().width / 600)
+    Math.trunc(document.body.getBoundingClientRect().width / 300)
   );
 };
 
