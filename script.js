@@ -269,7 +269,7 @@ const makeCarousel = function () {
 if (document.querySelector('.carousel')) {
   window.addEventListener('load', function () {
     getWeatherDataForCarousel(locations);
-    console.log(Math.trunc(document.body.getBoundingClientRect().width / 600));
+    console.log(Math.trunc(document.body.getBoundingClientRect().width / 300));
   });
   carousel.addEventListener('click', function (e) {
     if (e.target.closest('.card')) {
