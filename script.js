@@ -75,9 +75,9 @@ const createCard = function (data, coord, slide) {
   let html;
   html = `
               <div class="card">
-                <p class="temperature">${
+                <p class="temperature">${Math.round(
                   data.current_weather.temperature
-                } °C</p>
+                )} °C</p>
                 <p class = "weather">Weather: ${
                   weatherCode.get(data.current_weather.weathercode).weather
                 }
