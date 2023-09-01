@@ -28,8 +28,8 @@ html {
 
 body {
   width: 100%;
-  min-height: 100vh;
-  height: calc(var(--vh,1vh)*100);
+  
+  min-height: calc(var(--vh,1vh)*100);
   background-color: #222;
 }
 
@@ -331,10 +331,6 @@ footer a {
 }
 
 @media (max-width: 860px) {
-  body{
-    min-height: 93vh;
-  }
-  
   .nav-interactive > ul {
     display: none;
   }
