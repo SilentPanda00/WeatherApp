@@ -331,6 +331,10 @@ footer a {
 }
 
 @media (max-width: 860px) {
+  body{
+    min-height: 93vh;
+  }
+  
   .nav-interactive > ul {
     display: none;
   }
