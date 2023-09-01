@@ -1,62 +1,63 @@
-'use strict';
+"use strict";
 
 let selectedLocation;
 const hour = new Date().getHours();
 
-const searchBtn = document.querySelector('.search');
-const carousel = document.querySelector('.carousel');
+const searchBtn = document.querySelector(".search");
+const menuBtn = document.querySelector(".mobile-button");
+const carousel = document.querySelector(".carousel");
 
 const weatherCode = new Map([
-  [0, { weather: 'Clear Sky', icon: 'sun' }],
-  [1, { weather: 'Mainly Clear', icon: 'cloud-sun' }],
-  [2, { weather: 'Partly Cloudy', icon: 'cloud-sun' }],
-  [3, { weather: 'Overcast', icon: 'cloud' }],
-  [45, { weather: 'Fog' }],
-  [48, { weather: 'Depositing rime fog' }],
-  [51, { weather: 'Drizzle: Light' }],
-  [53, { weather: 'Drizzle: Moderate' }],
-  [55, { weather: 'Drizzle: Dense Intensity' }],
-  [56, { weather: 'Freezing Drizzle: Light' }],
-  [57, { weather: 'Freezing Drizzle: Dense Intensity' }],
-  [61, { weather: 'Rain: Slight' }],
-  [63, { weather: 'Rain: Moderate' }],
-  [65, { weather: 'Rain: Heavy Intensity' }],
-  [66, { weather: 'Freezing rain: Light' }],
-  [67, { weather: 'Freezing rain: Heavy intensity' }],
-  [71, { weather: 'Snow fall: Slight' }],
-  [73, { weather: 'Snow fall: Moderate' }],
-  [75, { weather: 'Snow fall: Heavy intensity' }],
-  [77, { weather: 'Snow Grains' }],
-  [80, { weather: 'Rain Showers: Slight' }],
-  [81, { weather: 'Rain Showers: Moderate' }],
-  [82, { weather: 'Rain Showers: Violent' }],
-  [85, { weather: 'Snow Showers: Slight' }],
-  [86, { weather: 'Snow Showers: Heavy' }],
-  [95, { weather: 'Thunderstorm: Slight or Moderate' }],
-  [96, { weather: 'Thunderstorm with heavy hail' }],
-  [99, { weather: 'Thunderstorm with slight hail' }],
+  [0, { weather: "Clear Sky", icon: "sun" }],
+  [1, { weather: "Mainly Clear", icon: "cloud-sun" }],
+  [2, { weather: "Partly Cloudy", icon: "cloud-sun" }],
+  [3, { weather: "Overcast", icon: "cloud" }],
+  [45, { weather: "Fog" }],
+  [48, { weather: "Depositing rime fog" }],
+  [51, { weather: "Drizzle: Light" }],
+  [53, { weather: "Drizzle: Moderate" }],
+  [55, { weather: "Drizzle: Dense Intensity" }],
+  [56, { weather: "Freezing Drizzle: Light" }],
+  [57, { weather: "Freezing Drizzle: Dense Intensity" }],
+  [61, { weather: "Rain: Slight" }],
+  [63, { weather: "Rain: Moderate" }],
+  [65, { weather: "Rain: Heavy Intensity" }],
+  [66, { weather: "Freezing rain: Light" }],
+  [67, { weather: "Freezing rain: Heavy intensity" }],
+  [71, { weather: "Snow fall: Slight" }],
+  [73, { weather: "Snow fall: Moderate" }],
+  [75, { weather: "Snow fall: Heavy intensity" }],
+  [77, { weather: "Snow Grains" }],
+  [80, { weather: "Rain Showers: Slight" }],
+  [81, { weather: "Rain Showers: Moderate" }],
+  [82, { weather: "Rain Showers: Violent" }],
+  [85, { weather: "Snow Showers: Slight" }],
+  [86, { weather: "Snow Showers: Heavy" }],
+  [95, { weather: "Thunderstorm: Slight or Moderate" }],
+  [96, { weather: "Thunderstorm with heavy hail" }],
+  [99, { weather: "Thunderstorm with slight hail" }],
 ]);
 
 const locations = [
-  'bucuresti',
-  'pitesti',
-  'craiova',
-  'constanta',
-  'brasov',
-  'sibiu',
-  'cluj-napoca',
-  'iasi',
-  'targu jiu',
-  'ramnicu valcea',
-  'ploiesti',
-  'buzau',
-  'galati',
-  'focsani',
-  'bacau',
-  'suceava',
-  'botosani',
-  'piatra neamt',
-  'timisoara',
+  "bucuresti",
+  "pitesti",
+  "craiova",
+  "constanta",
+  "brasov",
+  "sibiu",
+  "cluj-napoca",
+  "iasi",
+  "targu jiu",
+  "ramnicu valcea",
+  "ploiesti",
+  "buzau",
+  "galati",
+  "focsani",
+  "bacau",
+  "suceava",
+  "botosani",
+  "piatra neamt",
+  "timisoara",
 ];
 
 // const capitalize = function (str) {
@@ -101,7 +102,7 @@ const createCard = function (data, coord, slide) {
   html = `
               <div class="card">
                 <p class="location"><i class="fa-solid fa-location-dot"></i> ${
-                  coord[0].display_name.split(',')[0]
+                  coord[0].display_name.split(",")[0]
                 }</p>
                 <p class="temperature"><i class="fa-solid fa-${
                   weatherCode.get(data.current_weather.weathercode).icon
@@ -111,7 +112,7 @@ const createCard = function (data, coord, slide) {
                   weatherCode.get(data.current_weather.weathercode).weather
                 }
               </div>`;
-  slide.insertAdjacentHTML('afterbegin', html);
+  slide.insertAdjacentHTML("afterbegin", html);
 };
 
 //RENDER THE SLIDES AFTER FETCHING THE DATA FOR THE COORDINATES OF EACH LOCATION, AND USE THE COORDS TO FETCH THE WEATHER DATA
@@ -123,8 +124,8 @@ const renderCarousel = function (data, coords, cardsPerSlide) {
   // console.log(coords);
   const noSlides = Math.trunc(data.length / cardsPerSlide);
   for (let i = 1; i <= noSlides; i++) {
-    const slide = document.createElement('div');
-    slide.classList.add('slide');
+    const slide = document.createElement("div");
+    slide.classList.add("slide");
     for (
       let j = i * cardsPerSlide - cardsPerSlide + 1;
       j <= i * cardsPerSlide;
@@ -153,19 +154,19 @@ const renderCarousel = function (data, coords, cardsPerSlide) {
 const getWeatherDataForCarousel = async function (locations) {
   const coordsPr = [];
   const carouselDataPr = [];
-  locations.forEach(location => {
+  locations.forEach((location) => {
     coordsPr.push(
-      fetch(`https://geocode.maps.co/search?q={${location}}`).then(response =>
+      fetch(`https://geocode.maps.co/search?q={${location}}`).then((response) =>
         response.json()
       )
     );
   });
   const coords = await Promise.all(coordsPr);
-  coords.forEach(coord => {
+  coords.forEach((coord) => {
     carouselDataPr.push(
       fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${coord[0].lat}&longitude=${coord[0].lon}&hourly=temperature_2m,weathercode&current_weather=true&timeformat=unixtime&timezone=auto&forecast_days=1`
-      ).then(response => response.json())
+      ).then((response) => response.json())
     );
   });
   const carouselData = await Promise.all(carouselDataPr);
@@ -177,29 +178,29 @@ const getWeatherDataForCarousel = async function (locations) {
 //CAROUSEL FUNCTIONALITY
 
 const makeCarousel = function () {
-  let [...slides] = document.querySelectorAll('.slide');
-  const btnLeft = document.querySelector('.slider__btn--left');
-  const btnRight = document.querySelector('.slider__btn--right');
-  const dotContainer = document.querySelector('.dots');
+  let [...slides] = document.querySelectorAll(".slide");
+  const btnLeft = document.querySelector(".slider__btn--left");
+  const btnRight = document.querySelector(".slider__btn--right");
+  const dotContainer = document.querySelector(".dots");
 
   let curSlide = 0;
   if (getCardsPerSlide() === 1) slides = slides.slice(1);
   const totalSlides = slides.length;
-  console.log(slides);
+  // console.log(slides);
 
   // Functions
 
   const setInitialClasses = function () {
     // Targets the previous, current, and next items
     // This assumes there are at least three items.
-    slides[totalSlides - 1].classList.add('prev');
-    slides[0].classList.add('active');
-    slides[1].classList.add('next');
+    slides[totalSlides - 1].classList.add("prev");
+    slides[0].classList.add("active");
+    slides[1].classList.add("next");
   };
   const createDots = function () {
     slides.forEach(function (_, i) {
       dotContainer.insertAdjacentHTML(
-        'beforeend',
+        "beforeend",
         `<button class="dots__dot" data-slide="${i}"></button>`
       );
     });
@@ -207,12 +208,12 @@ const makeCarousel = function () {
 
   const activateDot = function (slide) {
     document
-      .querySelectorAll('.dots__dot')
-      .forEach(dot => dot.classList.remove('dots__dot--active'));
+      .querySelectorAll(".dots__dot")
+      .forEach((dot) => dot.classList.remove("dots__dot--active"));
 
     document
       .querySelector(`.dots__dot[data-slide="${slide}"]`)
-      .classList.add('dots__dot--active');
+      .classList.add("dots__dot--active");
   };
 
   const goToSlide = function (slide) {
@@ -246,12 +247,12 @@ const makeCarousel = function () {
     // Now we've worked out where we are and where we're going,
     // by adding/removing classes we'll trigger the transitions.
     // Reset old next/prev elements to default classes
-    slides[oldPrevious].className = 'slide';
-    slides[oldNext].className = 'slide';
+    slides[oldPrevious].className = "slide";
+    slides[oldNext].className = "slide";
     // Add new classes
-    slides[newPrevious].className = 'slide' + ' prev';
-    slides[slide].className = 'slide' + ' active';
-    slides[newNext].className = 'slide' + ' next';
+    slides[newPrevious].className = "slide" + " prev";
+    slides[slide].className = "slide" + " active";
+    slides[newNext].className = "slide" + " next";
   };
 
   // Next slide
@@ -285,14 +286,14 @@ const makeCarousel = function () {
   init();
 
   // Event handlers
-  btnRight.addEventListener('click', nextSlide);
-  btnLeft.addEventListener('click', prevSlide);
-  carousel.addEventListener('swiped-left', nextSlide);
-  carousel.addEventListener('swiped-right', prevSlide);
+  btnRight.addEventListener("click", nextSlide);
+  btnLeft.addEventListener("click", prevSlide);
+  carousel.addEventListener("swiped-left", nextSlide);
+  carousel.addEventListener("swiped-right", prevSlide);
 
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowLeft') prevSlide();
-    e.key === 'ArrowRight' && nextSlide();
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft") prevSlide();
+    e.key === "ArrowRight" && nextSlide();
   });
 
   // dotContainer.addEventListener('click', function (e) {
@@ -307,26 +308,26 @@ const makeCarousel = function () {
 
 //START FETCHING THE DATA ON LOAD FOR THE LOCATION FILE ONLY IF IN THE PAGE EXISTS THE CAROUSEL
 
-if (document.querySelector('.carousel')) {
-  window.addEventListener('load', function () {
+if (document.querySelector(".carousel")) {
+  window.addEventListener("load", function () {
     getWeatherDataForCarousel(locations);
   });
-  carousel.addEventListener('click', function (e) {
-    if (e.target.closest('.card')) {
+  carousel.addEventListener("click", function (e) {
+    if (e.target.closest(".card")) {
       selectedLocation = e.target
-        .closest('.card')
-        .querySelector('.location').textContent;
-      localStorage.setItem('selectedLocation', `${selectedLocation}`);
-      window.location.href = 'weather.html';
+        .closest(".card")
+        .querySelector(".location").textContent;
+      localStorage.setItem("selectedLocation", `${selectedLocation}`);
+      window.location.href = "weather.html";
     }
   });
 }
 
-searchBtn.addEventListener('keypress', function (e) {
-  if (e.key === 'Enter') {
+searchBtn.addEventListener("keypress", function (e) {
+  if (e.key === "Enter") {
     selectedLocation = searchBtn.value;
-    localStorage.setItem('selectedLocation', `${selectedLocation}`);
-    window.location.href = './weather.html';
+    localStorage.setItem("selectedLocation", `${selectedLocation}`);
+    window.location.href = "./weather.html";
   }
 });
 
@@ -334,25 +335,25 @@ const getWeatherWithChosenLocation = async function (wlocation) {
   //fetch the location coords
   const coords = await fetch(
     `https://geocode.maps.co/search?q={${wlocation}}`
-  ).then(response => response.json());
+  ).then((response) => response.json());
 
   //fetch the weather data with the coords
   const data = await fetch(
     `https://api.open-meteo.com/v1/forecast?latitude=${coords[0].lat}&longitude=${coords[0].lon}&hourly=temperature_2m,weathercode&timeformat=unixtime&timezone=auto&forecast_days=1`
-  ).then(response => response.json());
+  ).then((response) => response.json());
 
-  document.querySelector('.weather').textContent = weatherCode.get(
+  document.querySelector(".weather").textContent = weatherCode.get(
     data.hourly.weathercode[hour]
   ).weather;
-  document.querySelector('.temperature').textContent =
+  document.querySelector(".temperature").textContent =
     data.hourly.temperature_2m[hour];
-  document.querySelector('.location').textContent = coords[0].display_name;
-  localStorage.removeItem('selectedLocation');
+  document.querySelector(".location").textContent = coords[0].display_name;
+  localStorage.removeItem("selectedLocation");
 };
 
 const getWeatherUsingGeolocation = function () {
   //select the status message element
-  const statusMsg = document.querySelector('.error');
+  const statusMsg = document.querySelector(".error");
   //callback function
   const success = async function (position) {
     //storing coords
@@ -361,24 +362,24 @@ const getWeatherUsingGeolocation = function () {
     //using the coords to get info from api
     const data = await fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&current_weather=true&timeformat=unixtime&timezone=auto`
-    ).then(response => response.json());
+    ).then((response) => response.json());
     // console.log(data);
 
-    document.querySelector('.weather').textContent = weatherCode.get(
+    document.querySelector(".weather").textContent = weatherCode.get(
       data.hourly.weathercode[hour]
     ).weather;
-    document.querySelector('.temperature').textContent =
+    document.querySelector(".temperature").textContent =
       data.hourly.temperature_2m[hour];
     const locationName = (
       await fetch(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`).then(
-        response => response.json()
+        (response) => response.json()
       )
     ).address.city;
 
-    document.querySelector('.location').textContent = locationName;
+    document.querySelector(".location").textContent = locationName;
 
     //setting the status message to ""
-    statusMsg.textContent = '';
+    statusMsg.textContent = "";
     // statusMsg.textContent = `${new Date(
     //   data.current_weather.time * 1000
     // ).toLocaleString()}`;
@@ -386,20 +387,26 @@ const getWeatherUsingGeolocation = function () {
   //error handling function
   const error = function (e) {
     statusMsg.textContent = e.message;
-    statusMsg.textContent ??= 'Unable to retrieve your location.';
+    statusMsg.textContent ??= "Unable to retrieve your location.";
   };
   //checking if the geolocation api works
   if (!navigator.geolocation) {
-    statusMsg.textContent = 'Geolocation is not supported by your browser.';
+    statusMsg.textContent = "Geolocation is not supported by your browser.";
   } else {
-    statusMsg.textContent = 'Locating...';
+    statusMsg.textContent = "Locating...";
     navigator.geolocation.getCurrentPosition(success, error);
   }
 };
 
-if (window.location.pathname.includes('/weather.html'))
-  window.addEventListener('load', function () {
-    if (localStorage.getItem('selectedLocation'))
-      getWeatherWithChosenLocation(localStorage.getItem('selectedLocation'));
+if (window.location.pathname.includes("/weather.html"))
+  window.addEventListener("load", function () {
+    if (localStorage.getItem("selectedLocation"))
+      getWeatherWithChosenLocation(localStorage.getItem("selectedLocation"));
     else getWeatherUsingGeolocation();
   });
+
+menuBtn.addEventListener("click", (e) => {
+  e.target
+    .closest(".mobile-button")
+    .nextElementSibling.classList.toggle("hidden");
+});

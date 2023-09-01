@@ -53,44 +53,58 @@
     <script src="swiped-events.min.js"></script>
     <title>WeatherWhisper</title>
   </head>
-  <body>
+  <body class="flex">
     <header>
-      <section class="section-nav">
-        <nav class="nav-menu">
-          <div class="logo-and-name">
-            <div class="logo">
-              <img
-                src="./Pictures/weather_icon.png"
-                alt="App logo"
-                class="logo"
-              />
-            </div>
-
-            <p class="name">WeatherWhisper</p>
+      <nav class="flex">
+        <div class="logo-and-name flex">
+          <div class="logo">
+            <img
+              src="./Pictures/weather_icon.png"
+              alt="App logo"
+              class="logo"
+            />
           </div>
-          <ul>
+
+          <p class="name">WeatherWhisper</p>
+        </div>
+        <div class="nav-interactive flex">
+          <ul class="flex">
             <li><a class="nav-active" href="./index.html">Home</a></li>
             <li><a href="./weather.html">Weather</a></li>
             <li><a href="./locations.html">Locations</a></li>
             <li><a href="./about.html">About</a></li>
             <li><a href="./contact.html">Contact</a></li>
             <li><a href="./settings.html">Settings</a></li>
-            <li class="search-container">
-              <input
-                class="search expandright"
-                id="searchright"
-                placeholder="Search for a location..."
-              />
-              <label class="searchbutton" for="searchright"
-                ><i class="fa fa-solid fa-magnifying-glass"></i
-              ></label>
-            </li>
           </ul>
-        </nav>
-      </section>
-    </header>
 
-    <section class="section-content">
+          <div class="search-container">
+            <input
+              class="search expandright"
+              id="searchright"
+              placeholder="Search for a location..."
+            />
+            <label class="searchbutton" for="searchright"
+              ><i class="fa fa-solid fa-magnifying-glass"></i
+            ></label>
+          </div>
+          <div class="mobile-menu">
+            <div class="mobile-button">
+              <i class="fa-solid fa-bars"></i>
+            </div>
+
+            <ul class="hidden">
+              <li><a class="nav-active" href="./index.html">Home</a></li>
+              <li><a href="./weather.html">Weather</a></li>
+              <li><a href="./locations.html">Locations</a></li>
+              <li><a href="./about.html">About</a></li>
+              <li><a href="./contact.html">Contact</a></li>
+              <li><a href="./settings.html">Settings</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
       <div class="app-title">
         <h1>Weather Insights at Your Fingertips</h1>
         <p>Select one of the cards bellow to see more details:</p>
@@ -100,7 +114,11 @@
         <button class="slider__btn slider__btn--right">></button>
         <div class="dots"></div>
       </div>
-    </section>
-    <footer>This is a footer</footer>
+    </main>
+    <footer>
+      <a href="https://github.com/open-meteo/open-meteo"
+        >https://github.com/open-meteo/open-meteo</a
+      >
+    </footer>
   </body>
 </html>

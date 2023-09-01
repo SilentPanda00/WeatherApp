@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Neuton:wght@700&family=Quicksand:wght@300;400;700&display=swap"
       rel="stylesheet"
     />
 
@@ -50,49 +50,65 @@
       crossorigin="anonymous"
     ></script> -->
     <script defer src="script.js"></script>
+    <script src="swiped-events.min.js"></script>
     <title>WeatherWhisper</title>
   </head>
-  <body>
+  <body class="flex">
     <header>
-      <section class="section-nav">
-        <nav class="nav-menu">
-          <div class="logo-and-name">
-            <div class="logo">
-              <img
-                src="./Pictures/weather_icon.png"
-                alt="App logo"
-                class="logo"
-              />
+      <nav class="flex">
+        <div class="logo-and-name flex">
+          <div class="logo">
+            <img
+              src="./Pictures/weather_icon.png"
+              alt="App logo"
+              class="logo"
+            />
+          </div>
+
+          <p class="name">WeatherWhisper</p>
+        </div>
+        <div class="nav-interactive flex">
+          <ul class="flex">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./weather.html">Weather</a></li>
+            <li><a href="./locations.html">Locations</a></li>
+            <li><a class="nav-active" href="./about.html">About</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+            <li><a href="./settings.html">Settings</a></li>
+          </ul>
+
+          <div class="search-container">
+            <input
+              class="search expandright"
+              id="searchright"
+              placeholder="Search for a location..."
+            />
+            <label class="searchbutton" for="searchright"
+              ><i class="fa fa-solid fa-magnifying-glass"></i
+            ></label>
+          </div>
+          <div class="mobile-menu">
+            <div class="mobile-button">
+              <i class="fa-solid fa-bars"></i>
             </div>
 
-            <p class="name">WeatherWhisper</p>
+            <ul class="hidden">
+              <li><a href="./index.html">Home</a></li>
+              <li><a href="./weather.html">Weather</a></li>
+              <li><a href="./locations.html">Locations</a></li>
+              <li><a class="nav-active" href="./about.html">About</a></li>
+              <li><a href="./contact.html">Contact</a></li>
+              <li><a href="./settings.html">Settings</a></li>
+            </ul>
           </div>
-          <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="weather.html">Weather</a></li>
-            <li><a href="locations.html">Locations</a></li>
-            <li><a class="nav-active" href="about.html">About</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="settings.html">Settings</a></li>
-            <li class="search-container">
-              <form action="" method="">
-                <input
-                  class="search expandright"
-                  id="searchright"
-                  type="search"
-                  name="q"
-                  placeholder="Search"
-                />
-                <label class="searchbutton" for="searchright"
-                  ><i class="fa fa-solid fa-magnifying-glass"></i
-                ></label>
-              </form>
-            </li>
-          </ul>
-        </nav>
-      </section>
+        </div>
+      </nav>
     </header>
-    <section class="section-content"></section>
-    <footer>This is a footer</footer>
+    <main></main>
+    <footer>
+      <a href="https://github.com/open-meteo/open-meteo"
+        >https://github.com/open-meteo/open-meteo</a
+      >
+    </footer>
   </body>
 </html>
