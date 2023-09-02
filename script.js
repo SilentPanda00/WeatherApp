@@ -2,6 +2,7 @@
 
 let selectedLocation;
 const hour = new Date().getHours();
+let cardsPerSlide;
 
 const searchBtn = document.querySelector(".search");
 const menuBtn = document.querySelector(".mobile-button");
@@ -76,6 +77,16 @@ const locations = [
 // const hour = getForecastHour();
 // console.log(hour);
 
+const renderWeatherData = function (location, data) {
+  document.querySelector(".weather").textContent = weatherCode.get(
+    data.hourly.weathercode[hour]
+  ).weather;
+  document.querySelector(".temperature").textContent =
+    data.hourly.temperature_2m[hour];
+
+  document.querySelector(".location").textContent = location;
+};
+
 const getCardsPerSlide = function () {
   const maxWidth = Math.max(
     document.body.scrollWidth,
@@ -85,11 +96,11 @@ const getCardsPerSlide = function () {
     document.documentElement.clientWidth
   );
   switch (true) {
-    case maxWidth <= 780:
+    case maxWidth <= 860:
       return 1;
-    case maxWidth <= 1024:
+    case maxWidth <= 1280:
       return 2;
-    case maxWidth <= 1440:
+    case maxWidth <= 1560:
       return 3;
   }
   return 3;
@@ -117,7 +128,7 @@ const createCard = function (data, coord, slide) {
 
 //RENDER THE SLIDES AFTER FETCHING THE DATA FOR THE COORDINATES OF EACH LOCATION, AND USE THE COORDS TO FETCH THE WEATHER DATA
 
-const renderCarousel = function (data, coords, cardsPerSlide) {
+const renderCarousel = function (data, coords) {
   // console.log(data.cities);
   data = data.reverse();
   coords = coords.reverse();
@@ -137,16 +148,6 @@ const renderCarousel = function (data, coords, cardsPerSlide) {
     }
     carousel.prepend(slide);
   }
-  // if (data.length % cardsPerSlide !== 0) {
-  //   const rslide = document.createElement('div');
-  //   let rest = data.length - (data.length % cardsPerSlide) - 1;
-  //   rslide.classList.add('slide');
-  //   while (rest !== data.length) {
-  //     createCard(data[rest], coords[rest], rslide);
-  //     rest++;
-  //   }
-  //   carousel.prepend(rslide);
-  // }
 
   makeCarousel();
 };
@@ -165,14 +166,14 @@ const getWeatherDataForCarousel = async function (locations) {
   coords.forEach((coord) => {
     carouselDataPr.push(
       fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${coord[0].lat}&longitude=${coord[0].lon}&hourly=temperature_2m,weathercode&current_weather=true&timeformat=unixtime&timezone=auto&forecast_days=1`
+        `https://api.open-meteo.com/v1/forecast?latitude=${coord[0].lat}&longitude=${coord[0].lon}&hourly=temperature_2m,weathercode&current_weather=true&timeformat=unixtime&timezone=auto&models=best_match&forecast_days=1`
       ).then((response) => response.json())
     );
   });
   const carouselData = await Promise.all(carouselDataPr);
   // console.log(carouselData);
   // console.log(coords);
-  renderCarousel(carouselData, coords, getCardsPerSlide());
+  renderCarousel(carouselData, coords);
 };
 
 //CAROUSEL FUNCTIONALITY
@@ -184,7 +185,7 @@ const makeCarousel = function () {
   const dotContainer = document.querySelector(".dots");
 
   let curSlide = 0;
-  if (getCardsPerSlide() === 1) slides = slides.slice(1);
+  if (cardsPerSlide === 1) slides = slides.slice(1);
   const totalSlides = slides.length;
   // console.log(slides);
 
@@ -306,32 +307,8 @@ const makeCarousel = function () {
   // });
 };
 
-//START FETCHING THE DATA ON LOAD FOR THE LOCATION FILE ONLY IF IN THE PAGE EXISTS THE CAROUSEL
-
-if (document.querySelector(".carousel")) {
-  window.addEventListener("load", function () {
-    getWeatherDataForCarousel(locations);
-  });
-  carousel.addEventListener("click", function (e) {
-    if (e.target.closest(".card")) {
-      selectedLocation = e.target
-        .closest(".card")
-        .querySelector(".location").textContent;
-      localStorage.setItem("selectedLocation", `${selectedLocation}`);
-      window.location.href = "weather.html";
-    }
-  });
-}
-
-searchBtn.addEventListener("keypress", function (e) {
-  if (e.key === "Enter") {
-    selectedLocation = searchBtn.value;
-    localStorage.setItem("selectedLocation", `${selectedLocation}`);
-    window.location.href = "./weather.html";
-  }
-});
-
 const getWeatherWithChosenLocation = async function (wlocation) {
+  const statusMsg = document.querySelector(".error");
   //fetch the location coords
   const coords = await fetch(
     `https://geocode.maps.co/search?q={${wlocation}}`
@@ -339,15 +316,12 @@ const getWeatherWithChosenLocation = async function (wlocation) {
 
   //fetch the weather data with the coords
   const data = await fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${coords[0].lat}&longitude=${coords[0].lon}&hourly=temperature_2m,weathercode&timeformat=unixtime&timezone=auto&forecast_days=1`
+    `https://api.open-meteo.com/v1/forecast?latitude=${coords[0].lat}&longitude=${coords[0].lon}&hourly=temperature_2m,weathercode&timeformat=unixtime&timezone=auto&models=best_match&forecast_days=1`
   ).then((response) => response.json());
 
-  document.querySelector(".weather").textContent = weatherCode.get(
-    data.hourly.weathercode[hour]
-  ).weather;
-  document.querySelector(".temperature").textContent =
-    data.hourly.temperature_2m[hour];
-  document.querySelector(".location").textContent = coords[0].display_name;
+  renderWeatherData(coords[0].display_name, data);
+
+  statusMsg.classList.add("hidden");
   localStorage.removeItem("selectedLocation");
 };
 
@@ -364,25 +338,16 @@ const getWeatherUsingGeolocation = function () {
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&current_weather=true&timeformat=unixtime&timezone=auto`
     ).then((response) => response.json());
     // console.log(data);
-
-    document.querySelector(".weather").textContent = weatherCode.get(
-      data.hourly.weathercode[hour]
-    ).weather;
-    document.querySelector(".temperature").textContent =
-      data.hourly.temperature_2m[hour];
     const locationName = (
       await fetch(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`).then(
         (response) => response.json()
       )
     ).address.city;
-
-    document.querySelector(".location").textContent = locationName;
+    renderWeatherData(locationName, data);
 
     //setting the status message to ""
     statusMsg.textContent = "";
-    // statusMsg.textContent = `${new Date(
-    //   data.current_weather.time * 1000
-    // ).toLocaleString()}`;
+    statusMsg.classList.add("hidden");
   };
   //error handling function
   const error = function (e) {
@@ -398,6 +363,25 @@ const getWeatherUsingGeolocation = function () {
   }
 };
 
+//EVENT LISTENERS
+
+//START FETCHING THE DATA ON LOAD FOR THE LOCATION FILE ONLY IF THE CAROUSEL EXISTS IN THE PAGE
+
+if (document.querySelector(".carousel")) {
+  window.addEventListener("load", function () {
+    getWeatherDataForCarousel(locations);
+  });
+  carousel.addEventListener("click", function (e) {
+    if (e.target.closest(".card")) {
+      selectedLocation = e.target
+        .closest(".card")
+        .querySelector(".location").textContent;
+      localStorage.setItem("selectedLocation", `${selectedLocation}`);
+      window.location.href = "weather.html";
+    }
+  });
+}
+
 if (window.location.pathname.includes("/weather.html"))
   window.addEventListener("load", function () {
     if (localStorage.getItem("selectedLocation"))
@@ -405,17 +389,34 @@ if (window.location.pathname.includes("/weather.html"))
     else getWeatherUsingGeolocation();
   });
 
-menuBtn.addEventListener("click", (e) => {
-  e.target
-    .closest(".mobile-button")
-    .nextElementSibling.classList.toggle("hidden");
+searchBtn.addEventListener("keypress", function (e) {
+  if (e.key === "Enter") {
+    selectedLocation = searchBtn.value;
+    localStorage.setItem("selectedLocation", `${selectedLocation}`);
+    window.location.href = "./weather.html";
+  }
 });
 
-window.addEventListener("load",()=>{
+menuBtn.addEventListener("click", (e) => {
+  const mBtn = e.target.closest(".mobile-button");
+  mBtn.nextElementSibling.classList.toggle("hidden");
+  mBtn.getElementsByTagName("i")[0].classList.toggle("fa-bars");
+  mBtn.getElementsByTagName("i")[0].classList.toggle("fa-xmark");
+});
+
+window.addEventListener("load", () => {
   let vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty("--vh",`${vh}px`);
-})
-window.addEventListener("resize",()=>{
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+  cardsPerSlide = getCardsPerSlide();
+});
+
+window.addEventListener("resize", () => {
   let vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty("--vh",`${vh}px`);
-})
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+});
+
+fetch(
+  "https://api.open-meteo.com/v1/forecast?latitude=44.4234&longitude=26.1687&hourly=temperature_2m,apparent_temperature,precipitation_probability,weathercode,pressure_msl,surface_pressure,cloudcover,visibility,evapotranspiration,windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,uv_index,uv_index_clear_sky,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=auto&forecast_days=14&models=best_match"
+)
+  .then((response) => response.json())
+  .then((data) => console.log(data));

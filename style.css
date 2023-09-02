@@ -28,15 +28,15 @@ html {
 
 body {
   width: 100%;
-  
-  min-height: calc(var(--vh,1vh)*100);
+  min-height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   background-color: #222;
 }
 
 /* TYPOGRAPHY */
 
 nav .logo {
-  width: 40px;
+  width: 35px;
   margin-right: 1em;
 }
 
@@ -58,6 +58,10 @@ a {
 .nav-active {
   border-bottom: 2px solid var(--tangerine-yellow);
   color: var(--tangerine-yellow);
+}
+
+.mobile-menu .nav-active {
+  background-color: var(--light-blue);
 }
 
 .app-title h1 {
@@ -88,10 +92,6 @@ nav .logo-and-name {
 
 nav ul {
   align-items: center;
-}
-
-.mobile-menu {
-  display: none;
 }
 
 .search-container {
@@ -148,10 +148,11 @@ nav ul {
 }
 
 .mobile-menu {
-  position: relative;
   display: none;
+  position: relative;
   height: 44px;
   width: 50px;
+  opacity: 1;
 }
 
 .mobile-menu .mobile-button {
@@ -166,7 +167,7 @@ nav ul {
 
 .mobile-menu ul {
   position: absolute;
-  right: 0;
+  left: 0;
   top: 100%;
   height: auto;
 
@@ -176,6 +177,7 @@ nav ul {
   border: 2px solid var(--light-blue);
   background-color: #222;
   /* overflow: hidden; */
+
   z-index: 10000;
 }
 
@@ -232,9 +234,10 @@ main {
   justify-content: space-around;
   align-items: center;
   transition: transform 0.5s, opacity 0.5s, z-index 0.5s;
-  z-index: 10;
+  z-index: 1;
   opacity: 0;
   transform-style: preserve-3d;
+  cursor: pointer;
 }
 
 .slide.active {
@@ -247,7 +250,7 @@ main {
 }
 
 .slide.prev {
-  transform: translateX(-100%);
+  transform: translateX(-200%);
 }
 
 .slider__btn {
@@ -330,12 +333,12 @@ footer a {
   display: none;
 }
 
-@media (max-width: 860px) {
+@media only screen and (max-width: 860px) {
   .nav-interactive > ul {
     display: none;
   }
   nav {
-    padding: 0 0.5em;
+    padding: 0 1em;
   }
 
   .mobile-menu {
@@ -348,7 +351,7 @@ footer a {
   }
 }
 
-@media (max-width: 480px) {
+@media only screen and (max-width: 480px) {
   .app-title p {
     display: none;
   }

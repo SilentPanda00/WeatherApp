@@ -56,6 +56,21 @@
   <body class="flex">
     <header>
       <nav class="flex">
+        <div class="mobile-menu">
+          <div class="mobile-button">
+            <i class="fa-solid fa-bars"></i>
+          </div>
+
+          <ul class="hidden">
+            <li><a href="./index.html">Home</a></li>
+            <li><a class="nav-active" href="./weather.html">Weather</a></li>
+            <li><a href="./locations.html">Locations</a></li>
+            <li><a href="./about.html">About</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+            <li><a href="./settings.html">Settings</a></li>
+          </ul>
+        </div>
+
         <div class="logo-and-name flex">
           <div class="logo">
             <img
@@ -87,30 +102,14 @@
               ><i class="fa fa-solid fa-magnifying-glass"></i
             ></label>
           </div>
-          <div class="mobile-menu">
-            <div class="mobile-button">
-              <i class="fa-solid fa-bars"></i>
-            </div>
-
-            <ul class="hidden">
-              <li><a href="./index.html">Home</a></li>
-              <li><a class="nav-active" href="./weather.html">Weather</a></li>
-              <li><a href="./locations.html">Locations</a></li>
-              <li><a href="./about.html">About</a></li>
-              <li><a href="./contact.html">Contact</a></li>
-              <li><a href="./settings.html">Settings</a></li>
-            </ul>
-          </div>
         </div>
       </nav>
     </header>
     <main>
-      <section class="section-content">
-        <p class="error"></p>
-        <p class="location"></p>
-        <p class="temperature"></p>
-        <p class="weather"></p>
-      </section>
+      <p class="error"></p>
+      <p class="location"></p>
+      <p class="temperature"></p>
+      <p class="weather"></p>
     </main>
     <footer>
       <a href="https://github.com/open-meteo/open-meteo"
