@@ -365,6 +365,11 @@ const getWeatherUsingGeolocation = function () {
 
 //EVENT LISTENERS
 
+window.addEventListener("resize", () => {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+});
+
 //START FETCHING THE DATA ON LOAD FOR THE LOCATION FILE ONLY IF THE CAROUSEL EXISTS IN THE PAGE
 
 if (document.querySelector(".carousel")) {
@@ -410,10 +415,7 @@ window.addEventListener("load", () => {
   cardsPerSlide = getCardsPerSlide();
 });
 
-window.addEventListener("resize", () => {
-  let vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty("--vh", `${vh}px`);
-});
+
 
 fetch(
   "https://api.open-meteo.com/v1/forecast?latitude=44.4234&longitude=26.1687&hourly=temperature_2m,apparent_temperature,precipitation_probability,weathercode,pressure_msl,surface_pressure,cloudcover,visibility,evapotranspiration,windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,uv_index,uv_index_clear_sky,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=auto&forecast_days=14&models=best_match"
