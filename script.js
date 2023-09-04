@@ -9,34 +9,34 @@ const menuBtn = document.querySelector(".mobile-button");
 const carousel = document.querySelector(".carousel");
 
 const weatherCode = new Map([
-  [0, { weather: "Clear Sky", icon: "sun" }],
-  [1, { weather: "Mainly Clear", icon: "cloud-sun" }],
-  [2, { weather: "Partly Cloudy", icon: "cloud-sun" }],
-  [3, { weather: "Overcast", icon: "cloud" }],
-  [45, { weather: "Fog" }],
-  [48, { weather: "Depositing rime fog" }],
-  [51, { weather: "Drizzle: Light" }],
+  [0, { weather: "Clear Sky", iconDay: "clear-sky-day" }],
+  [1, { weather: "Mainly Clear", iconDay: "mainly-clear-day" }],
+  [2, { weather: "Partly Cloudy", iconDay: "partly-clowdy-day" }],
+  [3, { weather: "Overcast", iconDay: "overcast" }],
+  [45, { weather: "Fog", iconDay: "fog" }],
+  [48, { weather: "Depositing rime fog", iconDay: "fog" }],
+  [51, { weather: "Drizzle: Light", iconDay: "rain" }],
   [53, { weather: "Drizzle: Moderate" }],
   [55, { weather: "Drizzle: Dense Intensity" }],
   [56, { weather: "Freezing Drizzle: Light" }],
   [57, { weather: "Freezing Drizzle: Dense Intensity" }],
-  [61, { weather: "Rain: Slight" }],
-  [63, { weather: "Rain: Moderate" }],
-  [65, { weather: "Rain: Heavy Intensity" }],
-  [66, { weather: "Freezing rain: Light" }],
-  [67, { weather: "Freezing rain: Heavy intensity" }],
-  [71, { weather: "Snow fall: Slight" }],
-  [73, { weather: "Snow fall: Moderate" }],
-  [75, { weather: "Snow fall: Heavy intensity" }],
-  [77, { weather: "Snow Grains" }],
-  [80, { weather: "Rain Showers: Slight" }],
-  [81, { weather: "Rain Showers: Moderate" }],
-  [82, { weather: "Rain Showers: Violent" }],
-  [85, { weather: "Snow Showers: Slight" }],
-  [86, { weather: "Snow Showers: Heavy" }],
-  [95, { weather: "Thunderstorm: Slight or Moderate" }],
-  [96, { weather: "Thunderstorm with heavy hail" }],
-  [99, { weather: "Thunderstorm with slight hail" }],
+  [61, { weather: "Rain: Slight", iconDay: "rain-slight" }],
+  [63, { weather: "Rain: Moderate", iconDay: "rain-moderate" }],
+  [65, { weather: "Rain: Heavy Intensity", iconDay: "rain-heavy" }],
+  [66, { weather: "Freezing rain: Light", iconDay: "freezing-rain" }],
+  [67, { weather: "Freezing rain: Heavy intensity", iconDay: "freezing-rain" }],
+  [71, { weather: "Snow fall: Slight", iconDay: "snow" }],
+  [73, { weather: "Snow fall: Moderate", iconDay: "snow" }],
+  [75, { weather: "Snow fall: Heavy intensity", iconDay: "snow" }],
+  [77, { weather: "Snow Grains", iconDay: "snow" }],
+  [80, { weather: "Rain Showers: Slight", iconDay: "rain-slight" }],
+  [81, { weather: "Rain Showers: Moderate", iconDay: "rain-moderate" }],
+  [82, { weather: "Rain Showers: Violent", iconDay: "storm" }],
+  [85, { weather: "Snow Showers: Slight", iconDay: "snow" }],
+  [86, { weather: "Snow Showers: Heavy", iconDay: "snow" }],
+  [95, { weather: "Thunderstorm: Slight or Moderate", iconDay: "storm" }],
+  [96, { weather: "Thunderstorm with heavy hail", iconDay: "storm" }],
+  [99, { weather: "Thunderstorm with slight hail", iconDay: "hailstorm" }],
 ]);
 
 const locations = [
@@ -78,13 +78,44 @@ const locations = [
 // console.log(hour);
 
 const renderWeatherData = function (location, data) {
-  document.querySelector(".weather").textContent = weatherCode.get(
+  console.log(data);
+  const fields = [
+    "temperature_2m",
+    "temperature_2m_max",
+    "temperature_2m_min",
+    "is_day",
+    "windspeed_10m",
+    "winddirection_10m",
+    "apparent_temperature",
+    "cloudcover",
+    "precipitation_probability",
+    "surface_pressure",
+    "uv_index",
+    "visibility",
+  ];
+  fields.forEach((field) => {
+    if (field.startsWith("temperature_2m_m")) {
+      document.getElementById(field).textContent = data.daily[field][0];
+    } else {
+      document.getElementById(field).textContent = data.hourly[field][hour];
+    }
+  });
+  document.getElementById("weather").textContent = weatherCode.get(
     data.hourly.weathercode[hour]
   ).weather;
-  document.querySelector(".temperature").textContent =
-    data.hourly.temperature_2m[hour];
 
-  document.querySelector(".location").textContent = location;
+  document.getElementById("location").textContent = location;
+
+  document.getElementById("date").textContent = Intl.DateTimeFormat(
+    navigator.language
+  ).format(new Date());
+  document.getElementById("weather-icon").innerHTML = `<img
+  src="./Pictures/flaticon/png/${
+    weatherCode.get(data.hourly.weathercode[hour]).iconDay
+  }-color.png"
+/>`;
+
+  document.querySelector(".current-weather").classList.remove("hidden");
 };
 
 const getCardsPerSlide = function () {
@@ -115,13 +146,19 @@ const createCard = function (data, coord, slide) {
                 <p class="location"><i class="fa-solid fa-location-dot"></i> ${
                   coord[0].display_name.split(",")[0]
                 }</p>
-                <p class="temperature"><i class="fa-solid fa-${
-                  weatherCode.get(data.current_weather.weathercode).icon
-                }"></i> 
-                   ${Math.round(data.current_weather.temperature)} °C</p>
-                <p class = "weather">Weather: ${
+                <div>
+                  <div class="weather-icon">
+                    <img  src ='./Pictures/flaticon/png/${
+                      weatherCode.get(data.current_weather.weathercode).iconDay
+                    }-color.png'>
+                  </div>
+                  <p class="temperature">${Math.round(
+                    data.current_weather.temperature
+                  )} °C</p>
+                </div>
+                <p class = "weather">${
                   weatherCode.get(data.current_weather.weathercode).weather
-                }
+                }</p>
               </div>`;
   slide.insertAdjacentHTML("afterbegin", html);
 };
@@ -309,15 +346,26 @@ const makeCarousel = function () {
 
 const getWeatherWithChosenLocation = async function (wlocation) {
   const statusMsg = document.querySelector(".error");
+  let coords, data;
   //fetch the location coords
-  const coords = await fetch(
-    `https://geocode.maps.co/search?q={${wlocation}}`
-  ).then((response) => response.json());
+  statusMsg.textContent = "Getting coords...";
+  try {
+    coords = await fetch(
+      `https://geocode.maps.co/search?q={${wlocation}}`
+    ).then((response) => response.json());
+  } catch (error) {
+    statusMsg.textContent = `Could not get the coordinates for the location: ${error.message}.`;
+  }
 
   //fetch the weather data with the coords
-  const data = await fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${coords[0].lat}&longitude=${coords[0].lon}&hourly=temperature_2m,weathercode&timeformat=unixtime&timezone=auto&models=best_match&forecast_days=1`
-  ).then((response) => response.json());
+  statusMsg.textContent = "Getting weather data...";
+  try {
+    data = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${coords[0].lat}&longitude=${coords[0].lon}&hourly=temperature_2m,apparent_temperature,precipitation_probability,weathercode,pressure_msl,surface_pressure,cloudcover,visibility,evapotranspiration,windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,uv_index,uv_index_clear_sky,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=auto&forecast_days=14&models=best_match`
+    ).then((response) => response.json());
+  } catch (error) {
+    statusMsg.textContent = `Couldn't get the weather data for ${wlocation}: ${error.message}.`;
+  }
 
   renderWeatherData(coords[0].display_name, data);
 
@@ -328,21 +376,34 @@ const getWeatherWithChosenLocation = async function (wlocation) {
 const getWeatherUsingGeolocation = function () {
   //select the status message element
   const statusMsg = document.querySelector(".error");
+  let data, locationName;
+
   //callback function
   const success = async function (position) {
+    statusMsg.textContent = "Getting weather data...";
+
     //storing coords
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
     //using the coords to get info from api
-    const data = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&current_weather=true&timeformat=unixtime&timezone=auto`
-    ).then((response) => response.json());
+    try {
+      data = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,apparent_temperature,precipitation_probability,weathercode,pressure_msl,surface_pressure,cloudcover,visibility,evapotranspiration,windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,uv_index,uv_index_clear_sky,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=auto&forecast_days=14&models=best_match`
+      ).then((response) => response.json());
+    } catch (error) {
+      statusMsg.textContent = `Could not get the weather data for the current location: ${error.message}`;
+    }
     // console.log(data);
-    const locationName = (
-      await fetch(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`).then(
-        (response) => response.json()
-      )
-    ).address.city;
+    try {
+      locationName = (
+        await fetch(
+          `https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`
+        ).then((response) => response.json())
+      ).address.city;
+    } catch (error) {
+      statusMsg.textContent = error.message;
+    }
+
     renderWeatherData(locationName, data);
 
     //setting the status message to ""
@@ -415,10 +476,8 @@ window.addEventListener("load", () => {
   cardsPerSlide = getCardsPerSlide();
 });
 
-
-
-fetch(
-  "https://api.open-meteo.com/v1/forecast?latitude=44.4234&longitude=26.1687&hourly=temperature_2m,apparent_temperature,precipitation_probability,weathercode,pressure_msl,surface_pressure,cloudcover,visibility,evapotranspiration,windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,uv_index,uv_index_clear_sky,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=auto&forecast_days=14&models=best_match"
-)
-  .then((response) => response.json())
-  .then((data) => console.log(data));
+// fetch(
+//   "https://api.open-meteo.com/v1/forecast?latitude=44.4234&longitude=26.1687&hourly=temperature_2m,apparent_temperature,precipitation_probability,weathercode,pressure_msl,surface_pressure,cloudcover,visibility,evapotranspiration,windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,uv_index,uv_index_clear_sky,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=auto&forecast_days=14&models=best_match"
+// )
+//   .then((response) => response.json())
+//   .then((data) => console.log(data));
