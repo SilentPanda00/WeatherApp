@@ -374,7 +374,7 @@ footer > div {
 
 @media only screen and (max-width: 860px) {
   body {
-    height: 93vh;
+    min-height: 93vh;
   }
   .nav-interactive > ul {
     display: none;
