@@ -531,7 +531,7 @@ searchBtn.addEventListener("keypress", function (e) {
 
 menuBtn.addEventListener("click", (e) => {
   const mBtn = e.target.closest(".mobile-button");
-  mBtn.nextElementSibling.classList.toggle("hidden");
+  document.querySelector(".mobile").classList.toggle("hidden");
   mBtn.getElementsByTagName("i")[0].classList.toggle("fa-bars");
   mBtn.getElementsByTagName("i")[0].classList.toggle("fa-xmark");
 });

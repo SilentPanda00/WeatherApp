@@ -172,15 +172,13 @@ nav ul {
   cursor: pointer;
 }
 
-.mobile-menu ul {
+.mobile {
   position: absolute;
   left: 0;
-  top: 100%;
-  height: auto;
+  top: 0;
+  height: 100%;
 
-  width: 280px;
-  margin: 0;
-  padding: 0;
+  width: 100%;
   border: 2px solid var(--light-blue);
   background-color: #222;
   /* overflow: hidden; */
@@ -188,14 +186,14 @@ nav ul {
   z-index: 10000;
 }
 
-.mobile-menu a {
+.mobile a {
   display: block;
   text-align: center;
 }
 
 .searchbutton:hover,
 nav a:hover,
-.mobile-menu .mobile-button:hover,
+.mobile-menu:hover .mobile-button:hover,
 .slider__btn:hover {
   transition-duration: 0.4s;
   background-color: var(--vibrant-blue);
