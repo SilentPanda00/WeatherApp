@@ -212,11 +212,11 @@ main {
 }
 
 section {
-  width: 100%;
+  width: 90%;
   max-width: var(--max-content-width);
   padding: 2em;
   margin-top: 1em;
-  background: var(--vibrant-blue);
+  background: var(--charcoal-black);
   border-radius: 0.5em;
 }
 
@@ -351,7 +351,7 @@ section {
   width: 100px;
 }
 
-.card .temperature {
+.temperature {
   font-size: 3rem;
   font-weight: 400;
 }
@@ -372,9 +372,43 @@ footer > div {
   display: none;
 }
 
+/* WEATHER PAGE */
+
+.current-weather {
+  justify-content: space-around;
+  align-items: center;
+}
+
+.col {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 1em;
+}
+
+.col:nth-child(2) > div,
+.col:nth-child(3) > div {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 1em 0;
+}
+
+hr {
+  width: 100%;
+  border-bottom: 1px solid var(--very-light-blue);
+  opacity: 0.5;
+}
+
+/* RESPONSIVE LAYOUT */
+
 @media only screen and (max-width: 860px) {
   body {
-    min-height: 93vh;
+    height: 93vh;
+  }
+  section {
+    border-radius: 0;
   }
   .nav-interactive > ul {
     display: none;
@@ -384,6 +418,22 @@ footer > div {
   }
 
   .mobile-menu {
+    display: block;
+  }
+
+  .current-weather {
+    flex-direction: column;
+  }
+
+  .col {
+    align-items: center;
+  }
+
+  .col:nth-child(1) {
+    margin-bottom: 2em;
+  }
+
+  hr {
     display: block;
   }
 

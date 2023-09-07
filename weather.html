@@ -107,35 +107,62 @@
     </header>
     <main>
       <p class="error"></p>
-      <section class="current-weather hidden">
-        <p class="location">Location: <span id="location"></span></p>
-        <p class="date">Date: <span id="date"></span></p>
-        <p class="temperature"><span id="temperature_2m"></span>℃</p>
-        <div class="weather-icon" id="weather-icon"></div>
-        <p class="weather">Weather: <span id="weather"></span></p>
-        <p class="temp-interval" id="">
-          Temperature interval: <span id="temperature_2m_min"></span>-<span
-            id="temperature_2m_max"
-          ></span>
-        </p>
-        <p class="isday">Is day: <span id="is_day"></span></p>
-        <p class="wind-speed">
-          Wind speed: <span id="windspeed_10m"></span>km/h
-        </p>
-        <p class="wind-direction">
-          Wind direction: <span id="winddirection_10m"></span>º
-        </p>
+      <section class="current-weather hidden flex">
+        <div class="col flex">
+          <p class="location"><span id="location"></span></p>
+          <p class="date"><span id="date"></span></p>
+          <p class="temperature"><span id="temperature_2m"></span></p>
+          <div class="weather-icon" id="weather-icon"></div>
+          <p class="weather">Weather: <span id="weather"></span></p>
+          <p class="temp-interval" id="">
+            Temperature interval: <span id="temperature_2m_min"></span>-<span
+              id="temperature_2m_max"
+            ></span>
+          </p>
+        </div>
 
-        <p class="apparent-temp" id="apparent_temperature"></p>
-        ºC
-        <p class="cloud-cover" id="cloudcover"></p>
-        %
-        <p class="precip-prob" id="precipitation_probability"></p>
-        %
-        <p class="surface-pressure" id="surface_pressure"></p>
-        <p class="uv-index" id="uv_index"></p>
-        <p class="visibility" id="visibility"></p>
-        m
+        <div class="col flex">
+          <div class="wind-speed">
+            Wind speed: <span id="windspeed_10m"></span>
+          </div>
+          <hr />
+          <div class="wind-direction">
+            Wind direction: <span id="winddirection_10m"></span>
+          </div>
+          <hr />
+
+          <div class="apparent-temp">
+            Apparent temperature: <span id="apparent_temperature"></span>
+          </div>
+          <hr />
+
+          <div class="cloud-cover">
+            Clowd cover: <span id="cloudcover"></span>
+          </div>
+          <hr hidden />
+        </div>
+
+        <div class="col">
+          <div class="precip-prob">
+            Precipitation probability:
+            <span id="precipitation_probability"></span>
+          </div>
+          <hr />
+
+          <div class="surface-pressure">
+            Surface pressure: <span id="surface_pressure"></span>
+          </div>
+          <hr />
+
+          <div class="uv-index">UV index: <span id="uv_index"></span></div>
+          <hr />
+
+          <div class="visibility">
+            Visibility: <span id="visibility"></span>
+          </div>
+        </div>
+
+        <p class="isday hidden">Is day: <span id="is_day"></span></p>
       </section>
       <section class="hourly-weather"></section>
       <section class="daily-weather"></section>

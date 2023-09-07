@@ -9,9 +9,30 @@ const menuBtn = document.querySelector(".mobile-button");
 const carousel = document.querySelector(".carousel");
 
 const weatherCode = new Map([
-  [0, { weather: "Clear Sky", iconDay: "clear-sky-day" }],
-  [1, { weather: "Mainly Clear", iconDay: "mainly-clear-day" }],
-  [2, { weather: "Partly Cloudy", iconDay: "partly-clowdy-day" }],
+  [
+    0,
+    {
+      weather: "Clear Sky",
+      iconDay: "clear-sky-day",
+      iconNight: "clear-sky-night",
+    },
+  ],
+  [
+    1,
+    {
+      weather: "Mainly Clear",
+      iconDay: "mainly-clear-day",
+      iconNight: "mainly-clear-night",
+    },
+  ],
+  [
+    2,
+    {
+      weather: "Partly Cloudy",
+      iconDay: "partly-clowdy-day",
+      iconNight: "partly-clowdy-night",
+    },
+  ],
   [3, { weather: "Overcast", iconDay: "overcast" }],
   [45, { weather: "Fog", iconDay: "fog" }],
   [48, { weather: "Depositing rime fog", iconDay: "fog" }],
@@ -61,6 +82,16 @@ const locations = [
   "timisoara",
 ];
 
+const weekDays = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
 // const capitalize = function (str) {
 //   return str
 //     ?.split(' ')
@@ -77,13 +108,33 @@ const locations = [
 // const hour = getForecastHour();
 // console.log(hour);
 
+const displayTime = function (data) {
+  const locationTimeZone = data.timezone;
+  const options = {
+    timeZone: locationTimeZone,
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  };
+
+  const localDate = new Date().toLocaleString("en-US", options);
+
+  document.getElementById("date").textContent = `${
+    localDate.split(",")[0]
+  } ${localDate.slice(-11, -3)}`;
+};
+
 const renderWeatherData = function (location, data) {
   console.log(data);
+  const weatherObj = weatherCode.get(data.hourly.weathercode[hour]);
   const fields = [
     "temperature_2m",
     "temperature_2m_max",
     "temperature_2m_min",
-    "is_day",
     "windspeed_10m",
     "winddirection_10m",
     "apparent_temperature",
@@ -97,21 +148,34 @@ const renderWeatherData = function (location, data) {
     if (field.startsWith("temperature_2m_m")) {
       document.getElementById(field).textContent = data.daily[field][0];
     } else {
-      document.getElementById(field).textContent = data.hourly[field][hour];
+      document.getElementById(field).textContent =
+        data.hourly[field][hour] + data.hourly_units[field];
     }
   });
-  document.getElementById("weather").textContent = weatherCode.get(
-    data.hourly.weathercode[hour]
-  ).weather;
-
+  document.getElementById("weather").textContent = weatherObj.weather;
+  document.getElementById("is_day").textContent = data.hourly.is_day
+    ? "Day"
+    : "Night";
   document.getElementById("location").textContent = location;
 
-  document.getElementById("date").textContent = Intl.DateTimeFormat(
-    navigator.language
-  ).format(new Date());
+  //Displaying a marker if the location is current location of the
+  const icon = document.createElement("i");
+  const stored = localStorage.getItem("selectedLocation");
+  icon.classList.add("fa-solid");
+  icon.classList.add("fa-location-dot");
+  console.log(location);
+
+  document.querySelector(".location").prepend(icon);
+
+  //displaying the time
+  displayTime(data);
+  setInterval(displayTime, 1000, data);
+
   document.getElementById("weather-icon").innerHTML = `<img
   src="./Pictures/flaticon/png/${
-    weatherCode.get(data.hourly.weathercode[hour]).iconDay
+    data.is_day
+      ? weatherObj.iconDay
+      : weatherObj.iconNight || weatherObj.iconDay
   }-color.png"
 />`;
 
@@ -140,6 +204,7 @@ console.log(getCardsPerSlide());
 
 const createCard = function (data, coord, slide) {
   // console.log(data);
+  const weatherObj = weatherCode.get(data.current_weather.weathercode);
   let html;
   html = `
               <div class="card">
@@ -149,7 +214,9 @@ const createCard = function (data, coord, slide) {
                 <div>
                   <div class="weather-icon">
                     <img  src ='./Pictures/flaticon/png/${
-                      weatherCode.get(data.current_weather.weathercode).iconDay
+                      data.is_day
+                        ? weatherObj.iconDay
+                        : weatherObj.iconNight || weatherObj.iconDay
                     }-color.png'>
                   </div>
                   <p class="temperature">${Math.round(
@@ -370,7 +437,6 @@ const getWeatherWithChosenLocation = async function (wlocation) {
   renderWeatherData(coords[0].display_name, data);
 
   statusMsg.classList.add("hidden");
-  localStorage.removeItem("selectedLocation");
 };
 
 const getWeatherUsingGeolocation = function () {
