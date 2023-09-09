@@ -49,8 +49,7 @@
       integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
       crossorigin="anonymous"
     ></script> -->
-    <script defer src="script.js"></script>
-    <script src="swiped-events.min.js"></script>
+    <script defer type="module" src="main.js"></script>
     <title>WeatherWhisper</title>
   </head>
   <body class="flex">
@@ -60,15 +59,6 @@
           <div class="mobile-button">
             <i class="fa-solid fa-bars"></i>
           </div>
-
-          <ul class="hidden">
-            <li><a href="./index.html">Home</a></li>
-            <li><a class="nav-active" href="./weather.html">Weather</a></li>
-            <li><a href="./locations.html">Locations</a></li>
-            <li><a href="./about.html">About</a></li>
-            <li><a href="./contact.html">Contact</a></li>
-            <li><a href="./settings.html">Settings</a></li>
-          </ul>
         </div>
 
         <div class="logo-and-name flex">
@@ -83,6 +73,15 @@
           <p class="name">WeatherWhisper</p>
         </div>
         <div class="nav-interactive flex">
+          <ul class="flex">
+            <li><a href="./index.html">Home</a></li>
+            <li><a class="nav-active" href="./weather.html">Weather</a></li>
+            <li><a href="./locations.html">Locations</a></li>
+            <li><a href="./about.html">About</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+            <li><a href="./settings.html">Settings</a></li>
+          </ul>
+
           <div class="search-container">
             <input
               class="search expandright"
@@ -100,8 +99,10 @@
       <p class="error"></p>
       <section class="current-weather hidden flex">
         <div class="col flex">
-          <p class="location"><span id="location"></span></p>
-          <p class="date"><span id="date"></span></p>
+          <p class="location">
+            <i class="fa-solid fa-location-dot"></i><span id="location"></span>
+          </p>
+          <p class="time">Local time: <span id="time"></span></p>
           <p class="temperature"><span id="temperature_2m"></span></p>
           <div class="weather-icon" id="weather-icon"></div>
           <p class="weather">Weather: <span id="weather"></span></p>
@@ -163,7 +164,12 @@
         >https://github.com/open-meteo/open-meteo</a
       >
     </footer>
-    <ul class="mobile hidden">
+    <ul class="mobile side">
+      <li>
+        <div class="close-menu-button">
+          <i class="fa-solid fa-xmark"></i>
+        </div>
+      </li>
       <li><a href="./index.html">Home</a></li>
       <li><a class="nav-active" href="./weather.html">Weather</a></li>
       <li><a href="./locations.html">Locations</a></li>

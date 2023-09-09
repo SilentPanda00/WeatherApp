@@ -49,8 +49,8 @@
       integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
       crossorigin="anonymous"
     ></script> -->
-    <script defer src="script.js"></script>
-    <script src="swiped-events.min.js"></script>
+    <script defer type="module" src="main.js"></script>
+
     <title>WeatherWhisper</title>
   </head>
   <body class="flex">
@@ -101,7 +101,12 @@
         >https://github.com/open-meteo/open-meteo</a
       >
     </footer>
-    <ul class="mobile hidden">
+    <ul class="mobile side">
+      <li>
+        <div class="close-menu-button">
+          <i class="fa-solid fa-xmark"></i>
+        </div>
+      </li>
       <li><a href="./index.html">Home</a></li>
       <li><a href="./weather.html">Weather</a></li>
       <li><a href="./locations.html">Locations</a></li>
