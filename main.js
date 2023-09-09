@@ -87,16 +87,6 @@ const locations = [
   "timisoara",
 ];
 
-const weekDays = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
-
 // const capitalize = function (str) {
 //   return str
 //     ?.split(' ')
@@ -113,82 +103,50 @@ const weekDays = [
 // const hour = getForecastHour();
 // console.log(hour);
 
-const getCorrectTime = function (data) {
-  const locationTimeZone = data.timezone;
-  const options = {
-    timeZone: locationTimeZone,
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-  };
+// const renderWeatherData = function (location, data) {
+//   const localHour = getCorrectHour(getCorrectTime(data));
+//   const weatherObj = weatherCode.get(data.hourly.weathercode[localHour]);
+//   const fields = [
+//     "temperature_2m",
+//     "temperature_2m_max",
+//     "temperature_2m_min",
+//     "windspeed_10m",
+//     "winddirection_10m",
+//     "apparent_temperature",
+//     "cloudcover",
+//     "precipitation_probability",
+//     "surface_pressure",
+//     "uv_index",
+//     "visibility",
+//   ];
+//   fields.forEach((field) => {
+//     if (field.startsWith("temperature_2m_m")) {
+//       document.getElementById(field).textContent = data.daily[field][0];
+//     } else {
+//       document.getElementById(field).textContent =
+//         data.hourly[field][localHour] + data.hourly_units[field];
+//     }
+//   });
+//   document.getElementById("weather").textContent = weatherObj.weather;
+//   document.getElementById("is_day").textContent = data.hourly.is_day[localHour]
+//     ? "Day"
+//     : "Night";
+//   document.getElementById("location").textContent = location;
 
-  return new Date().toLocaleString("en-US", options);
-};
+//   //displaying the time
+//   displayTime(data);
+//   setInterval(displayTime, 1000, data);
 
-const getCorrectHour = function (dateStr) {
-  let hour = Number(dateStr.slice(-11, -9));
-  if (hour === 12) return hour;
-  if (dateStr.endsWith("PM")) {
-    hour += 12;
-  }
-  return hour;
-};
+//   document.getElementById("weather-icon").innerHTML = `<img
+//   src="./Pictures/flaticon/png/${
+//     data.hourly.is_day[localHour]
+//       ? weatherObj.iconDay
+//       : weatherObj.iconNight || weatherObj.iconDay
+//   }-color.png"
+// />`;
 
-const displayTime = function (data) {
-  const localHour = getCorrectTime(data);
-  document.getElementById("time").textContent = `${
-    localHour.split(",")[0]
-  } ${localHour.slice(-11)}`;
-};
-
-const renderWeatherData = function (location, data) {
-  const localHour = getCorrectHour(getCorrectTime(data));
-  const weatherObj = weatherCode.get(data.hourly.weathercode[localHour]);
-  const fields = [
-    "temperature_2m",
-    "temperature_2m_max",
-    "temperature_2m_min",
-    "windspeed_10m",
-    "winddirection_10m",
-    "apparent_temperature",
-    "cloudcover",
-    "precipitation_probability",
-    "surface_pressure",
-    "uv_index",
-    "visibility",
-  ];
-  fields.forEach((field) => {
-    if (field.startsWith("temperature_2m_m")) {
-      document.getElementById(field).textContent = data.daily[field][0];
-    } else {
-      document.getElementById(field).textContent =
-        data.hourly[field][localHour] + data.hourly_units[field];
-    }
-  });
-  document.getElementById("weather").textContent = weatherObj.weather;
-  document.getElementById("is_day").textContent = data.hourly.is_day[localHour]
-    ? "Day"
-    : "Night";
-  document.getElementById("location").textContent = location;
-
-  //displaying the time
-  displayTime(data);
-  setInterval(displayTime, 1000, data);
-
-  document.getElementById("weather-icon").innerHTML = `<img
-  src="./Pictures/flaticon/png/${
-    data.hourly.is_day[localHour]
-      ? weatherObj.iconDay
-      : weatherObj.iconNight || weatherObj.iconDay
-  }-color.png"
-/>`;
-
-  document.querySelector(".current-weather").classList.remove("hidden");
-};
+//   document.querySelector(".current-weather").classList.remove("hidden");
+// };
 
 const getCardsPerSlide = function () {
   const maxWidth = Math.max(
@@ -259,7 +217,7 @@ const renderCarousel = function (data, coords) {
     carousel.prepend(slide);
   }
 
-  const carouselObj = new Carousel(cardsPerSlide);
+  new Carousel(cardsPerSlide);
 };
 
 const getWeatherDataForCarousel = async function (locations) {
@@ -284,84 +242,188 @@ const getWeatherDataForCarousel = async function (locations) {
   renderCarousel(carouselData, coords);
 };
 
-const getWeatherWithChosenLocation = async function (wlocation) {
-  const statusMsg = document.querySelector(".error");
-  let coords, data;
-  //fetch the location coords
-  statusMsg.textContent = "Getting coords...";
-  try {
-    coords = await fetch(
-      `https://geocode.maps.co/search?q={${wlocation}}`
-    ).then((response) => response.json());
-  } catch (error) {
-    statusMsg.textContent = `Could not get the coordinates for the location: ${error.message}.`;
+class Forecast {
+  constructor() {
+    this.coords = {}; // Initialize coords object
+    this.locationName = localStorage.getItem("selectedLocation");
+    this.statusMsg = document.querySelector(".error");
+
+    this.init();
   }
 
-  //fetch the weather data with the coords
-  statusMsg.textContent = "Getting weather data...";
-  try {
-    data = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${coords[0].lat}&longitude=${coords[0].lon}&hourly=temperature_2m,apparent_temperature,precipitation_probability,weathercode,pressure_msl,surface_pressure,cloudcover,visibility,evapotranspiration,windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,uv_index,uv_index_clear_sky,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=auto&forecast_days=14&models=best_match`
-    ).then((response) => response.json());
-  } catch (error) {
-    statusMsg.textContent = `Couldn't get the weather data for ${wlocation}: ${error.message}.`;
+  async init() {
+    await this.setLocation();
+    await this.getWeather(this.locationName);
+    this.getCorrectTime();
+    this.getCorrectHour();
+    this.renderWeatherData();
   }
 
-  renderWeatherData(coords[0].display_name, data);
-
-  statusMsg.classList.add("hidden");
-};
-
-const getWeatherUsingGeolocation = function () {
-  //select the status message element
-  const statusMsg = document.querySelector(".error");
-  let data, locationName;
-
-  //callback function
-  const success = async function (position) {
-    statusMsg.textContent = "Getting weather data...";
-
-    //storing coords
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
-    //using the coords to get info from api
-    try {
-      data = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,apparent_temperature,precipitation_probability,weathercode,pressure_msl,surface_pressure,cloudcover,visibility,evapotranspiration,windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,uv_index,uv_index_clear_sky,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=auto&forecast_days=14&models=best_match`
-      ).then((response) => response.json());
-    } catch (error) {
-      statusMsg.textContent = `Could not get the weather data for the current location: ${error.message}`;
+  async setLocation() {
+    if (!this.locationName) {
+      await this.getLocation();
     }
-    // console.log(data);
-    try {
-      locationName = (
-        await fetch(
-          `https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`
-        ).then((response) => response.json())
-      ).address.city;
-    } catch (error) {
-      statusMsg.textContent = error.message;
-    }
-
-    renderWeatherData(locationName, data);
-
-    //setting the status message to ""
-    statusMsg.textContent = "";
-    statusMsg.classList.add("hidden");
-  };
-  //error handling function
-  const error = function (e) {
-    statusMsg.textContent = e.message;
-    statusMsg.textContent ??= "Unable to retrieve your location.";
-  };
-  //checking if the geolocation api works
-  if (!navigator.geolocation) {
-    statusMsg.textContent = "Geolocation is not supported by your browser.";
-  } else {
-    statusMsg.textContent = "Locating...";
-    navigator.geolocation.getCurrentPosition(success, error);
+    localStorage.clear();
   }
-};
+
+  async getLocation() {
+    const success = async (position) => {
+      try {
+        this.coords.lat = position.coords.latitude;
+        this.coords.lon = position.coords.longitude;
+
+        const response = await fetch(
+          `https://geocode.maps.co/reverse?lat=${this.coords.lat}&lon=${this.coords.lon}`
+        );
+        const data = await response.json();
+        this.locationName = data.address.city;
+      } catch (error) {
+        this.statusMsg.textContent = error.message;
+      }
+      this.statusMsg.textContent = "";
+    };
+
+    const error = (e) => {
+      this.statusMsg.textContent = e.message;
+      this.statusMsg.textContent ??= "Unable to retrieve your location.";
+    };
+
+    // Checking if the geolocation api works
+    if (!navigator.geolocation) {
+      this.statusMsg.textContent =
+        "Geolocation is not supported by your browser.";
+    } else {
+      this.statusMsg.textContent = "Locating...";
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+  }
+
+  async getWeather(location) {
+    try {
+      this.statusMsg.textContent = "Getting coords...";
+      const coordsResponse = await fetch(
+        `https://geocode.maps.co/search?q=${location}`
+      );
+
+      if (!coordsResponse.ok) {
+        throw new Error(
+          `Failed to fetch location coordinates (HTTP ${coordsResponse.status})`
+        );
+      }
+
+      const coordsData = await coordsResponse.json();
+      this.statusMsg.textContent = "";
+
+      this.statusMsg.textContent = "Getting weather data...";
+      const weatherResponse = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${coordsData[0].lat}&longitude=${coordsData[0].lon}&hourly=temperature_2m,apparent_temperature,precipitation_probability,weathercode,pressure_msl,surface_pressure,cloudcover,visibility,evapotranspiration,windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,uv_index,uv_index_clear_sky,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max,precipitation_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=auto&forecast_days=14&models=best_match`
+      );
+
+      if (!weatherResponse.ok) {
+        throw new Error(
+          `Failed to fetch weather data (HTTP ${weatherResponse.status})`
+        );
+      }
+
+      this.weatherData = await weatherResponse.json();
+      this.statusMsg.textContent = "";
+
+      this.statusMsg.classList.add("hidden");
+    } catch (error) {
+      this.statusMsg.textContent = `Error: ${error.message}`;
+    }
+  }
+
+  renderWeatherData() {
+    const localHour = this.localHour;
+    const weatherObj = weatherCode.get(
+      this.weatherData.hourly.weathercode[localHour]
+    );
+    const fields = [
+      "temperature_2m",
+      "temperature_2m_max",
+      "temperature_2m_min",
+      "windspeed_10m",
+      "winddirection_10m",
+      "apparent_temperature",
+      "cloudcover",
+      "precipitation_probability",
+      "surface_pressure",
+      "uv_index",
+      "visibility",
+    ];
+    fields.forEach((field) => {
+      if (field.startsWith("temperature_2m_m")) {
+        document.getElementById(field).textContent =
+          this.weatherData.daily[field][0];
+      } else {
+        document.getElementById(field).textContent =
+          this.weatherData.hourly[field][localHour] +
+          this.weatherData.hourly_units[field];
+      }
+    });
+    document.getElementById("weather").textContent = weatherObj.weather;
+    document.getElementById("is_day").textContent = this.weatherData.hourly
+      .is_day[localHour]
+      ? "Day"
+      : "Night";
+    document.getElementById("location").textContent = this.locationName;
+
+    // displaying the time
+    this.displayTime();
+    setInterval(() => this.displayTime(), 1000);
+
+    // setInterval(this.displayTime, 1000);
+
+    document.getElementById("weather-icon").innerHTML = `<img
+    src="./Pictures/flaticon/png/${
+      this.weatherData.hourly.is_day[localHour]
+        ? weatherObj.iconDay
+        : weatherObj.iconNight || weatherObj.iconDay
+    }-color.png"
+  />`;
+
+    document.querySelector(".current-weather").classList.remove("hidden");
+  }
+
+  async getCorrectTime() {
+    try {
+      const locationTimeZone = this.weatherData.timezone;
+      const options = {
+        timeZone: locationTimeZone,
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      };
+
+      this.localTime = new Date().toLocaleString("en-US", options);
+    } catch (error) {
+      this.statusMsg.textContent = `Error: ${error.message}`;
+    }
+  }
+
+  getCorrectHour() {
+    let hour = Number(this.localTime.slice(-11, -9));
+    if (hour === 12) return hour;
+    if (this.localTime.endsWith("PM")) {
+      hour += 12;
+    }
+    this.localHour = hour;
+  }
+
+  displayTime() {
+    this.getCorrectTime();
+    this.getCorrectHour();
+    const localHour = this.localTime;
+    document.getElementById("time").textContent = `${
+      localHour.split(",")[0]
+    } ${localHour.slice(-11)}`;
+  }
+}
 
 //EVENT LISTENERS
 
@@ -389,9 +451,9 @@ if (document.querySelector(".carousel")) {
 
 if (window.location.pathname.includes("/weather.html"))
   window.addEventListener("load", function () {
-    if (localStorage.getItem("selectedLocation"))
-      getWeatherWithChosenLocation(localStorage.getItem("selectedLocation"));
-    else getWeatherUsingGeolocation();
+    // new Forecast();
+    const forecast = new Forecast();
+    console.log(forecast);
   });
 
 searchBtn.addEventListener("keypress", function (e) {
