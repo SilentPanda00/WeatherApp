@@ -1,8 +1,7 @@
 class Carousel {
   constructor(elemPerSlide) {
     this.elemPerSlide = elemPerSlide;
-    this.slides =
-      elemPerSlide === 1 && [...document.querySelectorAll(".slide")].slice(1);
+    this.slides = [...document.querySelectorAll(".slide")];
     this.btnLeft = document.querySelector(".slider__btn--left");
     this.btnRight = document.querySelector(".slider__btn--right");
     this.dotContainer = document.querySelector(".dots");
@@ -97,6 +96,10 @@ class Carousel {
   }
 
   init() {
+    if (this.elemPerSlide === 1) {
+      this.slides = this.slides.slice(1);
+      this.totalSlides -= 1;
+    }
     this.setInitialClasses();
     this.createDots();
     this.activateDot(0);
