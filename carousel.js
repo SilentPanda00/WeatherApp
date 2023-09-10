@@ -1,13 +1,14 @@
 class Carousel {
-  constructor(elemPerSlide) {
-    this.elemPerSlide = elemPerSlide;
-    this.slides = [...document.querySelectorAll(".slide")];
+  constructor() {
+    this.slides = [];
     this.btnLeft = document.querySelector(".slider__btn--left");
     this.btnRight = document.querySelector(".slider__btn--right");
     this.dotContainer = document.querySelector(".dots");
     this.carousel = document.querySelector(".carousel");
     this.curSlide = 0;
     this.totalSlides = this.slides.length;
+    this.elemPerSlide = this.getCardsPerSlide();
+
     // Initialize the slider
     this.init();
   }
@@ -95,7 +96,28 @@ class Carousel {
     this.activateDot(this.curSlide);
   }
 
+  getCardsPerSlide() {
+    const maxWidth = Math.max(
+      document.body.scrollWidth,
+      document.documentElement.scrollWidth,
+      document.body.offsetWidth,
+      document.documentElement.offsetWidth,
+      document.documentElement.clientWidth
+    );
+    switch (true) {
+      case maxWidth <= 860:
+        return 1;
+      case maxWidth <= 1280:
+        return 2;
+      case maxWidth <= 1560:
+        return 3;
+    }
+    return 3;
+  }
+
   init() {
+    this.slides = [...document.querySelectorAll(".slide")];
+    this.elemPerSlide = this.getCardsPerSlide();
     if (this.elemPerSlide === 1) {
       this.slides = this.slides.slice(1);
       this.totalSlides -= 1;
