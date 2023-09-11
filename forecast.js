@@ -100,7 +100,7 @@ class Forecast {
 
       this.weatherData = await weatherResponse.json();
 
-      this.statusMsg.classList.add("hidden");
+      //this.statusMsg.classList.add("hidden");
       localStorage.clear();
     } catch (error) {
       this.statusMsg.textContent = `Error: ${error.message}`;
