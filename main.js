@@ -81,7 +81,7 @@ class WeatherApp {
   setVHVariable() {
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty("--vh", `${vh}px`);
-    if (window.location.pathname.includes("index")) window.location.reload();
+    //if (window.location.pathname.includes("index")) window.location.reload();
   }
 }
 
