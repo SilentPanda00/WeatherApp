@@ -41,7 +41,6 @@ class Forecast {
           );
           const data = await response.json();
           const locationName = data.address.city;
-          // this.statusMsg.textContent = data;
 
           resolve(locationName);
         } catch (error) {
@@ -61,6 +60,7 @@ class Forecast {
           "Geolocation is not supported by your browser.";
       } else {
         this.statusMsg.textContent = "Locating...";
+
         navigator.geolocation.getCurrentPosition(success, error);
       }
     });
@@ -73,6 +73,8 @@ class Forecast {
       const coordsResponse = await fetch(
         `https://geocode.maps.co/search?q=${this.locationName}`
       );
+
+      this.statusMsg.textContent = coordsResponse.status;
 
       if (!coordsResponse.ok) {
         throw new Error(
@@ -100,11 +102,11 @@ class Forecast {
 
       this.weatherData = await weatherResponse.json();
 
-      //this.statusMsg.classList.add("hidden");
       localStorage.clear();
     } catch (error) {
       this.statusMsg.textContent = `Error: ${error.message}`;
     }
+    // this.statusMsg.classList.add("hidden");
   }
 
   renderWeatherData() {
@@ -145,8 +147,6 @@ class Forecast {
     // displaying the time
     this.displayTime();
     setInterval(() => this.displayTime(), 1000);
-
-    // setInterval(this.displayTime, 1000);
 
     document.getElementById("weather-icon").innerHTML = `<img
       src="./Pictures/flaticon/png/${
