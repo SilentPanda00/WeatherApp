@@ -23,7 +23,7 @@ class WeatherApp {
     }
 
     // Set CSS variable for viewport height
-    // this.setVHVariable();
+    this.setVHVariable();
   }
 
   addEventListeners() {
