@@ -41,7 +41,7 @@ class Forecast {
           );
           const data = await response.json();
           const locationName = data.address.city;
-          this.statusMsg.textContent = data;
+          // this.statusMsg.textContent = data;
 
           resolve(locationName);
         } catch (error) {
