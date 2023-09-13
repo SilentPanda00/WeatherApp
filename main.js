@@ -9,7 +9,6 @@ class WeatherApp {
     this.menuBtn = document.querySelector(".mobile-button");
     this.closeMenuBtn = document.querySelector(".close-menu-button");
     this.carousel = document.querySelector(".carousel");
-
     this.selectedLocation = null;
 
     // Add event listeners
@@ -76,6 +75,7 @@ class WeatherApp {
   initForecast() {
     // Initialize Forecast here
     const forecast = new Forecast();
+    console.log(forecast);
   }
 
   setVHVariable() {

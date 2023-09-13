@@ -4,7 +4,6 @@ class Forecast {
   constructor() {
     this.coords = {}; // Initialize coords object
     this.statusMsg = document.querySelector(".error");
-
     //Load location from localStorage
     this.locationName = localStorage.getItem("selectedLocation");
 
@@ -24,11 +23,11 @@ class Forecast {
 
   async init() {
     await this.getWeather();
-    this.getCorrectTime();
-    this.getCorrectHour();
-    this.renderWeatherData();
+    await this.getCorrectTime();
+    this.getCorrectHour(); // Get the correct hour first
+    this.renderCurrentWeather(this.localHour); // Then render the weather data
+    this.renderDailyWeather();
   }
-
   async getLocation() {
     return new Promise((resolve, reject) => {
       const success = async (position) => {
@@ -45,6 +44,7 @@ class Forecast {
           resolve(locationName);
         } catch (error) {
           reject(error);
+          this.statusMsg.textContent = this.locationName;
         }
       };
 
@@ -60,7 +60,6 @@ class Forecast {
           "Geolocation is not supported by your browser.";
       } else {
         this.statusMsg.textContent = "Locating...";
-
         navigator.geolocation.getCurrentPosition(success, error);
       }
     });
@@ -73,8 +72,6 @@ class Forecast {
       const coordsResponse = await fetch(
         `https://geocode.maps.co/search?q=${this.locationName}`
       );
-
-      this.statusMsg.textContent = coordsResponse.status;
 
       if (!coordsResponse.ok) {
         throw new Error(
@@ -106,11 +103,10 @@ class Forecast {
     } catch (error) {
       this.statusMsg.textContent = `Error: ${error.message}`;
     }
-    // this.statusMsg.classList.add("hidden");
+    this.statusMsg.classList.add("hidden");
   }
 
-  renderWeatherData() {
-    const localHour = this.localHour;
+  renderCurrentWeather(localHour) {
     const weatherObj = weatherCode.get(
       this.weatherData.hourly.weathercode[localHour]
     );
@@ -148,20 +144,25 @@ class Forecast {
     this.displayTime();
     setInterval(() => this.displayTime(), 1000);
 
+    // setInterval(this.displayTime, 1000);
+
     document.getElementById("weather-icon").innerHTML = `<img
       src="./Pictures/flaticon/png/${
         this.weatherData.hourly.is_day[localHour]
           ? weatherObj.iconDay
           : weatherObj.iconNight || weatherObj.iconDay
-      }-color.png"
+      }-color.png" alt = "Weather Icon"
     />`;
 
-    document.querySelector(".current-weather").classList.remove("hidden");
+    document
+      .querySelector(".current-weather")
+      .closest("section")
+      .classList.remove("hidden");
   }
 
   async getCorrectTime() {
     try {
-      const locationTimeZone = this.weatherData.timezone;
+      const locationTimeZone = await this.weatherData.timezone;
       const options = {
         timeZone: locationTimeZone,
         weekday: "long",
@@ -181,9 +182,11 @@ class Forecast {
 
   getCorrectHour() {
     let hour = Number(this.localTime.slice(-11, -9));
-    if (hour === 12) return hour;
     if (this.localTime.endsWith("PM")) {
       hour += 12;
+    }
+    if (this.localTime.endsWith("AM") && hour === 12) {
+      hour = 0;
     }
     this.localHour = hour;
   }
@@ -195,6 +198,43 @@ class Forecast {
     document.getElementById("time").textContent = `${
       localHour.split(",")[0]
     } ${localHour.slice(-11)}`;
+  }
+
+  renderDailyWeather() {
+    const section = document.querySelector(".daily-weather");
+    const weekdays = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    this.weatherData.daily.time.forEach((dateString, i) => {
+      let day = weekdays[new Date(dateString).getDay()];
+      if (i > 6) day = "Next " + day;
+
+      const html = `
+      <div class="card-side flex">
+        <p class="date"> ${day}</p>
+        <div>
+          <div class="weather-icon">
+            <img  src ='./Pictures/flaticon/png/${
+              weatherCode.get(this.weatherData.daily.weathercode[i]).iconDay
+            }-color.png'>
+          </div>
+          <p class="temperature">${
+            this.weatherData.daily.temperature_2m_max[i]
+          } °C</p>
+        </div>
+        <p class = "weather">${
+          weatherCode.get(this.weatherData.daily.weathercode[i]).weather
+        }</p>
+      </div>`;
+      section.innerHTML += html;
+    });
+    section.classList.remove("hidden");
   }
 }
 

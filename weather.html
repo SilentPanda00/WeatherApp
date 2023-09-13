@@ -97,67 +97,74 @@
     </header>
     <main>
       <p class="error"></p>
-      <section class="current-weather hidden flex">
-        <div class="col flex">
-          <p class="location">
-            <i class="fa-solid fa-location-dot"></i><span id="location"></span>
-          </p>
-          <p class="time">Local time: <span id="time"></span></p>
-          <p class="temperature"><span id="temperature_2m"></span></p>
-          <div class="weather-icon" id="weather-icon"></div>
-          <p class="weather">Weather: <span id="weather"></span></p>
-          <p class="temp-interval" id="">
-            Temperature interval: <span id="temperature_2m_min"></span>-<span
-              id="temperature_2m_max"
-            ></span>
-          </p>
-        </div>
-
-        <div class="col flex">
-          <div class="wind-speed">
-            Wind speed: <span id="windspeed_10m"></span>
+      <section class="hidden">
+        <p>Current weather:</p>
+        <div class="current-weather flex">
+          <div class="col flex">
+            <p class="location">
+              <i class="fa-solid fa-location-dot"></i
+              ><span id="location"></span>
+            </p>
+            <p class="time">Local time: <span id="time"></span></p>
+            <p class="temperature"><span id="temperature_2m"></span></p>
+            <div class="weather-icon" id="weather-icon"></div>
+            <p class="weather">Weather: <span id="weather"></span></p>
+            <p class="temp-interval" id="">
+              Temperature interval: <span id="temperature_2m_min"></span>-<span
+                id="temperature_2m_max"
+              ></span>
+            </p>
           </div>
-          <hr />
-          <div class="wind-direction">
-            Wind direction: <span id="winddirection_10m"></span>
+
+          <div class="col flex">
+            <div class="wind-speed">
+              Wind speed: <span id="windspeed_10m"></span>
+            </div>
+            <hr />
+            <div class="wind-direction">
+              Wind direction: <span id="winddirection_10m"></span>
+            </div>
+            <hr />
+
+            <div class="apparent-temp">
+              Apparent temperature: <span id="apparent_temperature"></span>
+            </div>
+            <hr />
+
+            <div class="cloud-cover">
+              Clowd cover: <span id="cloudcover"></span>
+            </div>
+            <hr hidden />
           </div>
-          <hr />
 
-          <div class="apparent-temp">
-            Apparent temperature: <span id="apparent_temperature"></span>
-          </div>
-          <hr />
+          <div class="col flex">
+            <div class="precip-prob">
+              Precipitation probability:
+              <span id="precipitation_probability"></span>
+            </div>
+            <hr />
 
-          <div class="cloud-cover">
-            Clowd cover: <span id="cloudcover"></span>
-          </div>
-          <hr hidden />
-        </div>
+            <div class="surface-pressure">
+              Surface pressure: <span id="surface_pressure"></span>
+            </div>
+            <hr />
 
-        <div class="col">
-          <div class="precip-prob">
-            Precipitation probability:
-            <span id="precipitation_probability"></span>
-          </div>
-          <hr />
+            <div class="uv-index">UV index: <span id="uv_index"></span></div>
+            <hr />
 
-          <div class="surface-pressure">
-            Surface pressure: <span id="surface_pressure"></span>
-          </div>
-          <hr />
-
-          <div class="uv-index">UV index: <span id="uv_index"></span></div>
-          <hr />
-
-          <div class="visibility">
-            Visibility: <span id="visibility"></span>
+            <div class="visibility">
+              Visibility: <span id="visibility"></span>
+            </div>
           </div>
         </div>
 
         <p class="isday hidden">Is day: <span id="is_day"></span></p>
       </section>
-      <section class="hourly-weather"></section>
-      <section class="daily-weather"></section>
+      <section class="hourly-weather hidden"></section>
+      <section>
+        Daily weather:
+        <div class="daily-weather hidden flex"></div>
+      </section>
     </main>
     <footer>
       <a href="https://github.com/open-meteo/open-meteo"

@@ -237,10 +237,6 @@ section {
 }
 
 .carousel {
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
   width: 90%;
   height: 60vh;
   position: relative;
@@ -278,6 +274,16 @@ section {
 
 .slide.prev {
   transform: translateX(-200%);
+}
+
+.slide.swipe-me {
+  animation: swipe-me 2s infinite;
+}
+
+@keyframes swipe-me {
+  100% {
+    transform: translateX(-5px);
+  }
 }
 
 .slider__btn {
@@ -321,9 +327,6 @@ section {
   margin-right: 1.75rem;
   cursor: pointer;
   transition: all 0.5s;
-
-  /* Only necessary when overlying images */
-  /* box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.7); */
 }
 
 .dots__dot:last-child {
@@ -385,16 +388,21 @@ footer > div {
 /* WEATHER PAGE */
 
 .current-weather {
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+}
+
+.daily-weather {
+  flex-wrap: wrap;
+  gap: 1em;
+  justify-content: center;
 }
 
 .col {
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  width: 100%;
-  padding: 0 1em;
+  width: 30%;
 }
 
 .col:nth-child(2) > div,
@@ -409,6 +417,17 @@ hr {
   width: 100%;
   border-bottom: 1px solid var(--very-light-blue);
   opacity: 0.5;
+}
+
+/* SIDE-SCROLLING ELEMENT */
+
+.card-side {
+  min-width: 200px; /* Adjust the width of each card as needed */
+  height: auto; /* Adjust the height of each card as needed */
+  background-color: #222;
+  /* border: 1px solid #ccc; */
+  flex-direction: column;
+  /* display: inline-block; */
 }
 
 /* RESPONSIVE LAYOUT */
@@ -436,8 +455,15 @@ hr {
     flex-direction: column;
   }
 
+  .daily-weather {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    justify-content: flex-start;
+  }
+
   .col {
     align-items: center;
+    width: 100%;
   }
 
   .col:nth-child(1) {
