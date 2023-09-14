@@ -201,7 +201,7 @@ class Forecast {
   }
 
   renderDailyWeather() {
-    const section = document.querySelector(".daily-weather");
+    const container = document.querySelector(".daily-weather");
     const weekdays = [
       "Sunday",
       "Monday",
@@ -212,29 +212,100 @@ class Forecast {
       "Saturday",
     ];
     this.weatherData.daily.time.forEach((dateString, i) => {
+      const data = this.weatherData.daily;
       let day = weekdays[new Date(dateString).getDay()];
       if (i > 6) day = "Next " + day;
 
       const html = `
       <div class="card-side flex">
         <p class="date"> ${day}</p>
-        <div>
+        <div class="flex">
+        <p class="temperature">${data.temperature_2m_min[i]} - ${
+        data.temperature_2m_max[i]
+      } °C</p>
           <div class="weather-icon">
             <img  src ='./Pictures/flaticon/png/${
-              weatherCode.get(this.weatherData.daily.weathercode[i]).iconDay
+              weatherCode.get(data.weathercode[i]).iconDay
             }-color.png'>
           </div>
-          <p class="temperature">${
-            this.weatherData.daily.temperature_2m_max[i]
-          } °C</p>
         </div>
-        <p class = "weather">${
-          weatherCode.get(this.weatherData.daily.weathercode[i]).weather
-        }</p>
+        <p class = "weather">${weatherCode.get(data.weathercode[i]).weather}</p>
       </div>`;
-      section.innerHTML += html;
+      container.innerHTML += html;
     });
-    section.classList.remove("hidden");
+    container.closest("section").classList.remove("hidden");
+    // adding the scroll on button functionality
+
+    const scrollDistance = Math.round(
+      container.getBoundingClientRect().width / 2
+    );
+
+    //this.targetScroll = where the program has to scroll
+    this.targetScroll = 0;
+
+    document.querySelector(".btn-left-daily").addEventListener("click", () => {
+      this.targetScroll -= scrollDistance;
+      if (this.targetScroll < 0) this.targetScroll = 0;
+      this.scrollDaily(this.targetScroll, 500, container);
+    });
+    document.querySelector(".btn-right-daily").addEventListener("click", () => {
+      this.targetScroll += scrollDistance;
+      const maxScrollValue = container.scrollWidth - container.clientWidth;
+      if (this.targetScroll > maxScrollValue) {
+        this.targetScroll = maxScrollValue;
+      }
+      this.scrollDaily(this.targetScroll, 500, container);
+    });
+  }
+
+  renderHourlyWeather() {
+    const container = document.querySelector(".daily-weather");
+    container.closest("section").classList.remove("hidden");
+  }
+
+  scrollDaily(targetScroll, duration, scrollableContent) {
+    // targetScroll - the target scroll position (e.g., 500 pixels)
+    // duration - the duration of the scroll animation (in milliseconds)
+
+    // Calculate the current scroll position
+
+    const currentScroll = scrollableContent.scrollLeft;
+
+    // Calculate the distance to scroll
+    const distance = targetScroll - currentScroll;
+
+    // Record the start time of the animation
+    const startTime = performance.now();
+
+    // Animate the scroll
+    const animateScroll = (currentTime) => {
+      const elapsedTime = currentTime - startTime;
+
+      // Use easeInOutQuad easing function for smooth animation
+      const easedScroll = easeInOutQuad(
+        elapsedTime,
+        currentScroll,
+        distance,
+        duration
+      );
+
+      scrollableContent.scrollLeft = easedScroll;
+
+      if (elapsedTime < duration) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    // Easing function for smooth animation
+    const easeInOutQuad = (t, b, c, d) => {
+      t /= d / 2;
+      if (t < 1) return (c / 2) * t * t + b;
+      t--;
+      return (-c / 2) * (t * (t - 2) - 1) + b;
+    };
+
+    // Start the animation
+    requestAnimationFrame(animateScroll);
   }
 }
 

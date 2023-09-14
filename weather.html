@@ -52,7 +52,7 @@
     <script defer type="module" src="main.js"></script>
     <title>WeatherWhisper</title>
   </head>
-  <body class="flex">
+  <body class="flex scrollbar">
     <header>
       <nav class="flex">
         <div class="mobile-menu">
@@ -160,10 +160,28 @@
 
         <p class="isday hidden">Is day: <span id="is_day"></span></p>
       </section>
-      <section class="hourly-weather hidden"></section>
-      <section>
-        Daily weather:
-        <div class="daily-weather hidden flex"></div>
+      <section class="hidden">
+        <p>Hourly:</p>
+        <div class="weather-container">
+          <div class="hourly-weather flex scrollbar">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
+            tempore ad adipisci quos eum atque quam hic amet delectus, quidem
+            recusandae? Eius asperiores qui voluptatem amet quod deleniti facere
+            numquam, tempora veniam et ex omnis doloribus ipsam consequuntur
+            nisi recusandae tempore error aperiam excepturi corrupti. Culpa fuga
+            obcaecati provident iure.
+          </div>
+          <button class="btn btn-left-hourly"><</button>
+          <button class="btn btn-right-hourly">></button>
+        </div>
+      </section>
+      <section class="hidden">
+        <p>Daily weather:</p>
+        <div class="weather-container">
+          <div class="daily-weather flex scrollbar"></div>
+          <button class="btn btn-left btn-left-daily"><</button>
+          <button class="btn btn-right btn-right-daily">></button>
+        </div>
       </section>
     </main>
     <footer>

@@ -204,7 +204,8 @@ nav ul {
 nav a:hover,
 .mobile-menu:hover .mobile-button:hover,
 .slider__btn:hover,
-.close-menu-button {
+.close-menu-button,
+.btn:hover {
   transition-duration: 0.4s;
   background-color: var(--vibrant-blue);
   color: var(--tangerine-yellow);
@@ -217,15 +218,20 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+  gap: 1em;
 }
 
 section {
-  width: 90%;
+  width: 100%;
   max-width: var(--max-content-width);
   padding: 2em;
-  margin-top: 1em;
   background: var(--charcoal-black);
-  border-radius: 0.5em;
+}
+
+section > p {
+  margin-bottom: 1em;
+  font-size: 1.25rem;
+  color: var(--light-blue);
 }
 
 .app-title {
@@ -393,9 +399,16 @@ footer > div {
 }
 
 .daily-weather {
-  flex-wrap: wrap;
+  width: 90%;
   gap: 1em;
-  justify-content: center;
+  justify-content: flex-start;
+  margin: 0 auto;
+  scroll-behavior: smooth;
+  overflow: auto;
+}
+
+.weather-container {
+  position: relative;
 }
 
 .col {
@@ -419,15 +432,68 @@ hr {
   opacity: 0.5;
 }
 
-/* SIDE-SCROLLING ELEMENT */
-
 .card-side {
-  min-width: 200px; /* Adjust the width of each card as needed */
-  height: auto; /* Adjust the height of each card as needed */
+  width: 175px; /* Adjust the width of each card as needed */
+  min-width: 175px;
+  height: 250px;
   background-color: #222;
-  /* border: 1px solid #ccc; */
   flex-direction: column;
-  /* display: inline-block; */
+  align-items: center;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.card-side > div {
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-side .temperature {
+  font-size: 1.75rem;
+}
+
+/* SCROLLBAR CUSTOMIZATION */
+
+.scrollbar {
+  scrollbar-width: thin; /* thin, auto, or none */
+  scrollbar-color: #333 #666; /* thumb-color track-color */
+}
+
+/* For WebKit-based browsers (Chrome, Safari) */
+/* Note: These properties require a -webkit- prefix */
+/* You can adjust the values as needed */
+.scrollbar::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #666;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background-color: #333;
+}
+
+.btn {
+  position: absolute;
+  height: 250px;
+  width: 4%;
+  font-size: 3rem;
+  color: inherit;
+  background-color: #222;
+}
+
+.btn-left {
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.btn-right {
+  top: 0;
+  right: 0;
+  z-index: 100;
 }
 
 /* RESPONSIVE LAYOUT */
@@ -437,7 +503,6 @@ hr {
     min-height: 93vh;
   }
   section {
-    border-radius: 0;
     text-align: center;
   }
   .nav-interactive > ul {
@@ -459,6 +524,10 @@ hr {
     flex-wrap: nowrap;
     overflow-x: scroll;
     justify-content: flex-start;
+  }
+
+  .btn {
+    display: none;
   }
 
   .col {
@@ -484,7 +553,7 @@ hr {
   .app-title p {
     display: none;
   }
-  section {
+  /* section {
     width: 100%;
-  }
+  } */
 }
