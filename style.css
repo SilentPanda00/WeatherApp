@@ -205,7 +205,8 @@ nav a:hover,
 .mobile-menu:hover .mobile-button:hover,
 .slider__btn:hover,
 .close-menu-button,
-.btn:hover {
+.btn:hover,
+.card-side:hover {
   transition-duration: 0.4s;
   background-color: var(--vibrant-blue);
   color: var(--tangerine-yellow);
@@ -231,6 +232,7 @@ section {
 section > p {
   margin-bottom: 1em;
   font-size: 1.25rem;
+  font-weight: 700;
   color: var(--light-blue);
 }
 
@@ -295,12 +297,12 @@ section > p {
 .slider__btn {
   position: absolute;
   display: block;
-  top: 50%;
-  background: var(--very-light-blue);
-  color: var(--dark-blue);
-  border-radius: 50%;
-  height: 3rem;
-  width: 3rem;
+  top: 0%;
+  background: var(--charcoal-black);
+  color: var(--very-light-blue);
+  /* border-radius: 50%; */
+  height: 80%;
+  width: 5rem;
   font-size: 2rem;
   cursor: pointer;
   z-index: 1000;
@@ -308,12 +310,12 @@ section > p {
 
 .slider__btn--left {
   left: 6%;
-  transform: translate(-50%, -50%);
+  /* transform: translate(-50%, 50%); */
 }
 
 .slider__btn--right {
   right: 6%;
-  transform: translate(50%, -50%);
+  /* transform: translate(50%, 50%); */
 }
 
 .dots {
@@ -359,7 +361,7 @@ section > p {
   background: var(--charcoal-black);
   padding: 1em;
   text-align: center;
-  border-radius: 1em;
+  /* border-radius: 1em; */
 }
 
 .card:hover {
@@ -405,6 +407,10 @@ footer > div {
   margin: 0 auto;
   scroll-behavior: smooth;
   overflow: auto;
+}
+
+.hourly-weather {
+  position: relative;
 }
 
 .weather-container {

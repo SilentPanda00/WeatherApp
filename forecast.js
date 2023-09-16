@@ -236,11 +236,16 @@ class Forecast {
     container.closest("section").classList.remove("hidden");
     // adding the scroll on button functionality
 
-    const scrollDistance = Math.round(
-      container.getBoundingClientRect().width / 2
+    const cardsGap = Number(
+      window.getComputedStyle(container).getPropertyValue("gap").slice(0, -2)
     );
+    const cardLength = document
+      .querySelector(".card-side")
+      .getBoundingClientRect().width;
+    const containerLength = Math.round(container.getBoundingClientRect().width);
 
-    //this.targetScroll = where the program has to scroll
+    const scrollDistance =
+      containerLength - (containerLength % (cardsGap + cardLength));
     this.targetScroll = 0;
 
     document.querySelector(".btn-left-daily").addEventListener("click", () => {
