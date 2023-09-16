@@ -400,17 +400,14 @@ footer > div {
   align-items: center;
 }
 
-.daily-weather {
+.daily-weather,
+.hourly-weather {
   width: 90%;
   gap: 1em;
   justify-content: flex-start;
   margin: 0 auto;
   scroll-behavior: smooth;
   overflow: auto;
-}
-
-.hourly-weather {
-  position: relative;
 }
 
 .weather-container {
