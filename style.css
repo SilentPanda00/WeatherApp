@@ -407,7 +407,7 @@ footer > div {
   justify-content: flex-start;
   margin: 0 auto;
   scroll-behavior: smooth;
-  overflow: auto;
+  overflow-x: auto;
 }
 
 .weather-container {
@@ -507,7 +507,9 @@ hr {
   }
   section {
     text-align: center;
+    padding: 2em 0;
   }
+
   .nav-interactive > ul {
     display: none;
   }
@@ -521,6 +523,7 @@ hr {
 
   .current-weather {
     flex-direction: column;
+    padding: 0 2em;
   }
 
   .daily-weather {

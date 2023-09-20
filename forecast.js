@@ -6,7 +6,6 @@ class Forecast {
     this.statusMsg = document.querySelector(".error");
     //Load location from localStorage
     this.locationName = localStorage.getItem("selectedLocation");
-    this.targetScroll = { daily: 0, hourly: 0 };
 
     //If it isn't in localStorage, try to get it  from geolocation
     if (!this.locationName) {
@@ -214,6 +213,7 @@ class Forecast {
       "Saturday",
     ];
     const data = this.weatherData.daily;
+
     data.time.forEach((dateString, i) => {
       const date = new Date(dateString);
 
@@ -246,6 +246,9 @@ class Forecast {
 
   renderHourlyWeather() {
     const container = document.querySelector(".hourly-weather");
+    const weatherObj = weatherCode.get(
+      this.weatherData.hourly.weathercode[this.localHour]
+    );
     const weekdays = [
       "Sunday",
       "Monday",
@@ -256,13 +259,17 @@ class Forecast {
       "Saturday",
     ];
     const data = this.weatherData.hourly;
-    data.time.slice(0, 14 * 24).forEach((dateString, i, all) => {
+    data.time.slice(this.localHour, 7 * 24).forEach((dateString, i, all) => {
       const date = new Date(dateString);
-
       const hour = String(date.getHours()).padStart(2, "0") + ":00";
       let day = weekdays[new Date(dateString).getDay()];
 
       if (i > all.length / 2 - 1) day = "Next " + day;
+      const weatherObj = weatherCode.get(data.weathercode[i]);
+      const isDay = data.is_day[date.getHours()];
+      const icon = isDay
+        ? weatherObj.iconDay
+        : weatherObj.iconNight || weatherObj.iconDay;
 
       const html = `
       <div class="card-side flex">
@@ -271,19 +278,16 @@ class Forecast {
         <p class="temperature">${data.temperature_2m[i]}
        °C</p>
           <div class="weather-icon">
-            <img  src ='./Pictures/flaticon/png/${
-              weatherCode.get(data.weathercode[i]).iconDay
-            }-color.png'>
+            <img  src ='./Pictures/flaticon/png/${icon}-color.png'>
           </div>
         </div>
-        <p class = "weather">${weatherCode.get(data.weathercode[i]).weather}</p>
+        <p class = "weather">${weatherObj.weather}</p>
       </div>`;
       container.innerHTML += html;
     });
 
-    this.applyScroll(container, "hourly");
-
     container.closest("section").classList.remove("hidden");
+    this.applyScroll(container, "hourly");
   }
 
   applyScroll(container, sectionType) {
@@ -297,16 +301,15 @@ class Forecast {
 
     const scrollDistance =
       containerLength - (containerLength % (cardsGap + cardWidth));
-    this.targetScroll[sectionType] = 0;
 
     document
       .querySelector(`.btn-left-${sectionType}`)
       .addEventListener("click", () => {
-        this.targetScroll[sectionType] -= scrollDistance;
-        if (this.targetScroll[sectionType] < 0)
-          this.targetScroll[sectionType] = 0;
+        // this.targetScroll[sectionType] -= scrollDistance;
+        // if (this.targetScroll[sectionType] < 0)
+        //   this.targetScroll[sectionType] = 0;
         this.animateScrollContent(
-          this.targetScroll[sectionType],
+          container.scrollLeft - scrollDistance,
           100,
           container
         );
@@ -314,13 +317,13 @@ class Forecast {
     document
       .querySelector(`.btn-right-${sectionType}`)
       .addEventListener("click", () => {
-        this.targetScroll[sectionType] += scrollDistance;
-        const maxScrollValue = container.scrollWidth - container.clientWidth;
-        if (this.targetScroll[sectionType] > maxScrollValue) {
-          this.targetScroll[sectionType] = maxScrollValue;
-        }
+        // this.targetScroll[sectionType] += scrollDistance;
+        // const maxScrollValue = container.scrollWidth - container.clientWidth;
+        // if (this.targetScroll[sectionType] > maxScrollValue) {
+        //   this.targetScroll[sectionType] = maxScrollValue;
+        // }
         this.animateScrollContent(
-          this.targetScroll[sectionType],
+          container.scrollLeft + scrollDistance,
           100,
           container
         );
