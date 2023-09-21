@@ -51,15 +51,21 @@ nav .name {
   font-weight: 700;
 }
 
-ul {
+nav ul {
   list-style-type: none;
 }
 
+nav a,
+.mobile a,
 a {
   text-decoration: none;
   color: inherit;
   font-weight: 700;
   padding: 0.75em;
+}
+
+a {
+  padding: 0;
 }
 
 .nav-active {
@@ -205,8 +211,8 @@ nav a:hover,
 .mobile-menu:hover .mobile-button:hover,
 .slider__btn:hover,
 .close-menu-button,
-.btn:hover,
-.card-side:hover {
+.btn:hover/*,
+.card-side:hover*/ {
   transition-duration: 0.4s;
   background-color: var(--vibrant-blue);
   color: var(--tangerine-yellow);
@@ -257,7 +263,7 @@ section > p {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
+  width: 70%;
   height: 80%;
   display: flex;
   justify-content: space-around;
@@ -377,17 +383,16 @@ section > p {
   font-weight: 400;
 }
 
-footer > a {
-  display: block;
-  width: 100%;
-  margin: 0 auto;
+footer {
+  min-height: 2em;
   text-align: center;
-  font: inherit;
+  align-items: center;
+  justify-content: center;
 }
 
-footer > div {
+/* footer > div {
   display: block;
-}
+} */
 
 .hidden {
   display: none;
@@ -497,6 +502,63 @@ hr {
   top: 0;
   right: 0;
   z-index: 100;
+}
+
+/* FORM STYLING */
+
+form {
+  display: flex;
+  gap: 1em;
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+  background: var(--charcoal-black);
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 0px #000000;
+}
+
+.form-info {
+  order: 1;
+  width: 50%;
+}
+
+.form-message {
+  flex-direction: column;
+  order: 2;
+  width: 50%;
+  height: 100%;
+}
+
+label,
+input,
+textarea,
+#submit-button {
+  display: block;
+  width: 100%;
+  margin-bottom: 1em;
+  border: none;
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid var(--light-blue);
+}
+
+textarea {
+  flex-grow: 1;
+}
+
+#submit-button {
+  height: 2em;
+  background-color: var(--very-light-blue);
+}
+
+#submit-button:hover {
+  background-color: var(--light-blue);
+}
+
+input {
+  height: 2rem;
 }
 
 /* RESPONSIVE LAYOUT */

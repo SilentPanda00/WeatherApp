@@ -50,6 +50,7 @@
       crossorigin="anonymous"
     ></script> -->
     <script defer type="module" src="main.js"></script>
+    <!-- <script src="./contact.js"></script> -->
 
     <title>WeatherWhisper</title>
   </head>
@@ -96,8 +97,24 @@
         </div>
       </nav>
     </header>
-    <main></main>
-    <footer>
+    <main>
+      <form action="/submit" method="post">
+        <div class="form-message flex">
+          <label for="message">Message:</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+
+        <div class="form-info">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required />
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required />
+          <button id="submit-button" type="submit">Submit</button>
+        </div>
+      </form>
+    </main>
+    <footer class="flex">
       <a href="https://github.com/open-meteo/open-meteo"
         >https://github.com/open-meteo/open-meteo</a
       >

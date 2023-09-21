@@ -246,9 +246,6 @@ class Forecast {
 
   renderHourlyWeather() {
     const container = document.querySelector(".hourly-weather");
-    const weatherObj = weatherCode.get(
-      this.weatherData.hourly.weathercode[this.localHour]
-    );
     const weekdays = [
       "Sunday",
       "Monday",
@@ -259,7 +256,7 @@ class Forecast {
       "Saturday",
     ];
     const data = this.weatherData.hourly;
-    data.time.slice(this.localHour, 7 * 24).forEach((dateString, i, all) => {
+    data.time.slice(this.localHour, 5 * 24).forEach((dateString, i, all) => {
       const date = new Date(dateString);
       const hour = String(date.getHours()).padStart(2, "0") + ":00";
       let day = weekdays[new Date(dateString).getDay()];
@@ -297,7 +294,7 @@ class Forecast {
     const cardWidth = container
       .querySelector(".card-side")
       .getBoundingClientRect().width;
-    const containerLength = Math.round(container.getBoundingClientRect().width);
+    const containerLength = Math.floor(container.getBoundingClientRect().width);
 
     const scrollDistance =
       containerLength - (containerLength % (cardsGap + cardWidth));
@@ -305,26 +302,18 @@ class Forecast {
     document
       .querySelector(`.btn-left-${sectionType}`)
       .addEventListener("click", () => {
-        // this.targetScroll[sectionType] -= scrollDistance;
-        // if (this.targetScroll[sectionType] < 0)
-        //   this.targetScroll[sectionType] = 0;
         this.animateScrollContent(
           container.scrollLeft - scrollDistance,
-          100,
+          200,
           container
         );
       });
     document
       .querySelector(`.btn-right-${sectionType}`)
       .addEventListener("click", () => {
-        // this.targetScroll[sectionType] += scrollDistance;
-        // const maxScrollValue = container.scrollWidth - container.clientWidth;
-        // if (this.targetScroll[sectionType] > maxScrollValue) {
-        //   this.targetScroll[sectionType] = maxScrollValue;
-        // }
         this.animateScrollContent(
           container.scrollLeft + scrollDistance,
-          100,
+          200,
           container
         );
       });
@@ -335,6 +324,8 @@ class Forecast {
     // duration - the duration of the scroll animation (in milliseconds)
 
     // Calculate the current scroll position
+
+    console.log(scrollableContent.scrollLeft);
 
     const currentScroll = scrollableContent.scrollLeft;
 
