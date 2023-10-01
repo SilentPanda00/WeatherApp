@@ -22,20 +22,26 @@ class Forecast {
   }
 
   async init() {
-    await this.getWeather();
-    await this.getCorrectTime();
-    this.getCorrectHour(); // Get the correct hour first
-    this.renderCurrentWeather(this.localHour); // Then render the weather data
-    this.renderHourlyWeather();
-    this.renderDailyWeather();
+    try {
+      await this.getWeather();
+      if (!this.weatherData)
+        throw new Error(`Could not get the data for ${this.locationName}`);
+      await this.getCorrectTime();
+      this.getCorrectHour(); // Get the correct hour first
+      this.renderCurrentWeather(this.localHour); // Then render the weather data
+      this.renderHourlyWeather();
+      this.renderDailyWeather();
+    } catch (err) {
+      this.statusMsg = err.message;
+    }
   }
   async getLocation() {
     return new Promise((resolve, reject) => {
       const success = async (position) => {
         try {
-          let lat = position.coords.latitude;
-          let lon = position.coords.longitude;
+          const { latitude: lat, longitude: lon } = position.coords;
 
+          //getting the name of the location
           const response = await fetch(
             `https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`
           );
@@ -43,9 +49,8 @@ class Forecast {
           const locationName = data.address.city;
 
           resolve(locationName);
-        } catch (error) {
-          reject(error);
-          this.statusMsg.textContent = this.locationName;
+        } catch (err) {
+          reject(err);
         }
       };
 
@@ -67,9 +72,8 @@ class Forecast {
   }
 
   async getWeather() {
+    this.statusMsg.textContent = "Getting coords...";
     try {
-      this.statusMsg.textContent = "Getting coords...";
-
       const coordsResponse = await fetch(
         `https://geocode.maps.co/search?q=${this.locationName}`
       );
@@ -82,10 +86,13 @@ class Forecast {
 
       const coordsData = await coordsResponse.json();
 
+      console.log(coordsData.length);
+      if (!coordsData.length) {
+        throw new Error("Wrong location name.");
+      }
+
       //getting the full name of the location
       this.locationName = coordsData[0].display_name;
-
-      this.statusMsg.textContent = ``;
 
       this.statusMsg.textContent = "Getting weather data...";
       const weatherResponse = await fetch(
@@ -100,11 +107,12 @@ class Forecast {
 
       this.weatherData = await weatherResponse.json();
 
-      localStorage.clear();
+      this.statusMsg.classList.add("hidden");
     } catch (error) {
       this.statusMsg.textContent = `Error: ${error.message}`;
+    } finally {
+      localStorage.clear();
     }
-    this.statusMsg.classList.add("hidden");
   }
 
   renderCurrentWeather(localHour) {
@@ -159,46 +167,6 @@ class Forecast {
       .querySelector(".current-weather")
       .closest("section")
       .classList.remove("hidden");
-  }
-
-  async getCorrectTime() {
-    try {
-      const locationTimeZone = await this.weatherData.timezone;
-      const options = {
-        timeZone: locationTimeZone,
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
-      };
-
-      this.localTime = new Date().toLocaleString("en-US", options);
-    } catch (error) {
-      this.statusMsg.textContent = `Error: ${error.message}`;
-    }
-  }
-
-  getCorrectHour() {
-    let hour = Number(this.localTime.slice(-11, -9));
-    if (this.localTime.endsWith("PM")) {
-      hour += 12;
-    }
-    if (this.localTime.endsWith("AM") && hour === 12) {
-      hour = 0;
-    }
-    this.localHour = hour;
-  }
-
-  displayTime() {
-    this.getCorrectTime();
-    this.getCorrectHour();
-    const localHour = this.localTime;
-    document.getElementById("time").textContent = `${
-      localHour.split(",")[0]
-    } ${localHour.slice(-11)}`;
   }
 
   renderDailyWeather() {
@@ -364,6 +332,46 @@ class Forecast {
 
     // Start the animation
     requestAnimationFrame(animateScroll);
+  }
+
+  async getCorrectTime() {
+    try {
+      const locationTimeZone = await this.weatherData.timezone;
+      const options = {
+        timeZone: locationTimeZone,
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      };
+
+      this.localTime = new Date().toLocaleString("en-US", options);
+    } catch (error) {
+      this.statusMsg.textContent = `Error: ${error.message}`;
+    }
+  }
+
+  getCorrectHour() {
+    let hour = Number(this.localTime.slice(-11, -9));
+    if (this.localTime.endsWith("PM")) {
+      hour += 12;
+    }
+    if (this.localTime.endsWith("AM") && hour === 12) {
+      hour = 0;
+    }
+    this.localHour = hour;
+  }
+
+  displayTime() {
+    this.getCorrectTime();
+    this.getCorrectHour();
+    const localHour = this.localTime;
+    document.getElementById("time").textContent = `${
+      localHour.split(",")[0]
+    } ${localHour.slice(-11)}`;
   }
 }
 

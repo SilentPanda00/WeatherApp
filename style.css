@@ -229,6 +229,7 @@ main {
 }
 
 section {
+  position: relative;
   width: 100%;
   max-width: var(--max-content-width);
   padding: 2em;
@@ -460,6 +461,17 @@ hr {
   font-size: 1.75rem;
 }
 
+.about {
+  background: url(./Pictures/lightning.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: inset 0 0 0 100vw rgba(34, 34, 34, 0.5);
+}
+
+.about > section {
+  background-color: initial;
+}
+
 /* SCROLLBAR CUSTOMIZATION */
 
 .scrollbar {
@@ -508,8 +520,12 @@ hr {
 
 form {
   display: flex;
+  flex-direction: column;
   gap: 1em;
   width: 90%;
+  height: 100%;
+  max-height: 500px;
+  max-width: 500px;
   margin: 0 auto;
   padding: 20px;
   background: var(--charcoal-black);
@@ -517,16 +533,8 @@ form {
   box-shadow: 0px 0px 10px 0px #000000;
 }
 
-.form-info {
-  order: 1;
-  width: 50%;
-}
-
-.form-message {
-  flex-direction: column;
-  order: 2;
-  width: 50%;
-  height: 100%;
+#message {
+  height: 200px;
 }
 
 label,
@@ -535,8 +543,14 @@ textarea,
 #submit-button {
   display: block;
   width: 100%;
-  margin-bottom: 1em;
   border: none;
+  padding: 0.5em;
+}
+
+label,
+#submit-button {
+  color: var(--light-blue);
+  font-weight: 700;
 }
 
 input:focus,
@@ -544,13 +558,10 @@ textarea:focus {
   outline: 2px solid var(--light-blue);
 }
 
-textarea {
-  flex-grow: 1;
-}
-
 #submit-button {
-  height: 2em;
-  background-color: var(--very-light-blue);
+  font-size: 1rem;
+  height: 3em;
+  color: var(--charcoal-black);
 }
 
 #submit-button:hover {
@@ -558,7 +569,7 @@ textarea {
 }
 
 input {
-  height: 2rem;
+  height: 1.5rem;
 }
 
 /* RESPONSIVE LAYOUT */

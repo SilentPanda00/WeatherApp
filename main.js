@@ -5,7 +5,8 @@ import Forecast from "./forecast.js";
 
 class WeatherApp {
   constructor() {
-    this.searchBtn = document.querySelector(".search");
+    this.searchImput = document.querySelector(".search");
+    this.searchBtn = document.querySelector(".searchbutton");
     this.menuBtn = document.querySelector(".mobile-button");
     this.closeMenuBtn = document.querySelector(".close-menu-button");
     this.carousel = document.querySelector(".carousel");
@@ -32,11 +33,9 @@ class WeatherApp {
     });
 
     // Event listener for search button
-    this.searchBtn.addEventListener("keypress", (e) => {
+    this.searchImput.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
-        this.selectedLocation = this.searchBtn.value;
-        localStorage.setItem("selectedLocation", this.selectedLocation);
-        window.location.href = "./weather.html";
+        this.handleSearch();
       }
     });
 
@@ -82,6 +81,12 @@ class WeatherApp {
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty("--vh", `${vh}px`);
     // if (window.location.pathname.includes("index")) window.location.reload();
+  }
+
+  handleSearch() {
+    this.selectedLocation = this.searchImput.value;
+    localStorage.setItem("selectedLocation", this.selectedLocation);
+    window.location.href = "./weather.html";
   }
 }
 
